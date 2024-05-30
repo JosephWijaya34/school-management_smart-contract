@@ -10,28 +10,36 @@ contract SchoolManagement {
     struct Admin {
         uint id;
         string name;
+        bool exist;
     }
 
     struct Teacher {
         uint id;
         string name;
+        bool exist;
     }
 
     struct Student {
         uint id;
         string name;
+        bool exist;
     }
 
     struct MataPelajaran {
         uint id;
         string name;
         uint teacherID;
+        uint[] studentID;
+        mapping(uint => uint) studentScores; // studentID to score
     }
 
     mapping(address => Admin) public admins;
     mapping(address => Teacher) public teachers;
     mapping(address => Student) public students;
     mapping(uint => MataPelajaran) public matapelajarans;
+    mapping(address => bool) listAdmin;
+    mapping(address => bool) listTeacher;
+    mapping(address => bool) listStudent;
 
     //testing
     uint public adminCounter;
