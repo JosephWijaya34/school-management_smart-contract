@@ -2,10 +2,6 @@
 
 pragma solidity ^0.8.0;
 
-// SPDX-License-Identifier: UNLICENSED
-
-pragma solidity ^0.8.0;
-
 contract SchoolManagement {
     struct Admin {
         uint id;
