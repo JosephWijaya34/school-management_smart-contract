@@ -3,46 +3,38 @@
 pragma solidity ^0.8.0;
 
 contract SchoolManagement {
-    struct Admin {
-        string name;
-        bool exist;
-    }
 
     struct Teacher {
         string name;
-        bool exist;
     }
 
     struct Student {
         string name;
-        bool exist;
     }
 
     struct MataPelajaran {
         string name;
-        uint teacherID;
-        uint[] studentID;
-        mapping(uint => uint) studentScores; // studentID to score
+        address teacherAddress;
+        address[] listStudent;
+        mapping(address => uint) studentScores;
     }
+
+    address public admin;
 
     mapping(address => Teacher) public teachers;
     mapping(address => Student) public students;
     mapping(uint => MataPelajaran) public matapelajarans;
-    mapping(address => bool) listAdmin;
     mapping(address => bool) listTeacher;
     mapping(address => bool) listStudent;
 
     //testing
-    uint public adminCounter;
     uint public teacherCounter;
     uint public studentCounter;
     uint public mataPelajaranCounter;
-    address public assigner;
-    address public admin;
 
     constructor() {
         // set satu admin
-        admin = msg.address;
+        admin = msg.sender;
     }
 
     event teacherAdded(address _teacherAddress, string teacherName);
