@@ -8,27 +8,22 @@ pragma solidity ^0.8.0;
 
 contract SchoolManagement {
     struct Admin {
-        uint id;
         string name;
     }
 
     struct Teacher {
-        uint id;
         string name;
     }
 
     struct Student {
-        uint id;
         string name;
     }
 
     struct MataPelajaran {
-        uint id;
         string name;
         uint teacherID;
     }
 
-    mapping(address => Admin) public admins;
     mapping(address => Teacher) public teachers;
     mapping(address => Student) public students;
     mapping(uint => MataPelajaran) public matapelajarans;
