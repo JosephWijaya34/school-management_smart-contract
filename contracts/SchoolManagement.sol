@@ -2,68 +2,44 @@
 
 pragma solidity ^0.8.0;
 
-// SPDX-License-Identifier: UNLICENSED
-
-pragma solidity ^0.8.0;
-
 contract SchoolManagement {
-    struct Admin {
-        uint id;
-        string name;
-        bool exist;
-    }
 
     struct Teacher {
-        uint id;
         string name;
-        bool exist;
     }
 
     struct Student {
-        uint id;
         string name;
-        bool exist;
     }
 
     struct MataPelajaran {
-        uint id;
         string name;
-        uint teacherID;
-        uint[] studentID;
-        mapping(uint => uint) studentScores; // studentID to score
+        address teacherAddress;
+        address[] listStudent;
+        mapping(address => uint) studentScores;
     }
 
-    mapping(address => Admin) public admins;
+    address public admin;
+
     mapping(address => Teacher) public teachers;
     mapping(address => Student) public students;
     mapping(uint => MataPelajaran) public matapelajarans;
-    mapping(address => bool) listAdmin;
     mapping(address => bool) listTeacher;
     mapping(address => bool) listStudent;
 
     //testing
-    uint public adminCounter;
     uint public teacherCounter;
     uint public studentCounter;
     uint public mataPelajaranCounter;
-    address public assigner;
 
     constructor() {
-        addAdmin(assigner, "Joseph Ganteng");
+        // set satu admin
+        admin = msg.sender;
     }
 
-    event adminAdded(address _adminAddress, string adminName);
     event teacherAdded(address _teacherAddress, string teacherName);
     event studentAdded(address _studentAddress, string studentName);
     event mataPelajaranAdded(string namaMataPelajaran);
-
-    modifier newAdmin(address _admin) {
-        require(
-            admins[_admin].exist == false,
-            "admin address already registered"
-        );
-        _;
-    }
 
     modifier newTeacher(address _teacher) {
         require(
@@ -95,13 +71,13 @@ contract SchoolManagement {
     }
 
     modifier onlyAdmin() {
-        require(listAdmin[msg.sender], "Address is not an admin");
+       require(msg.sender == admin, "Only admin can call this function");
         _;
     }
 
     modifier onlyAuthorized() {
         require(
-            listTeacher[msg.sender] || listAdmin[msg.sender],
+            listTeacher[msg.sender] || admin,
             "Address is not a teacher / admin"
         );
         _;
@@ -110,14 +86,6 @@ contract SchoolManagement {
     modifier onlyStudent() {
         require(listStudent[msg.sender], "Address is not a student");
         _;
-    }
-
-    function addAdmin(address addr, string memory _name) public newAdmin(addr) {
-        admins[addr] = Admin(adminCounter, _name, true);
-        listAdmin[msg.sender] = true;
-        adminCounter++;
-
-        emit adminAdded(addr, _name);
     }
 
     function addTeacher(
