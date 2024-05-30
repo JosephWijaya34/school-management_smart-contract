@@ -2,99 +2,130 @@
 
 pragma solidity ^0.8.0;
 
-contract SchoolManagement {
+// SPDX-License-Identifier: UNLICENSED
 
-    struct Guru {
-        address guruAddress;
+pragma solidity ^0.8.0;
+
+contract SchoolManagement {
+    struct Admin {
+        uint id;
         string name;
-        string assignedMapel;
     }
 
-    struct Murid {
-        address muridAddress;
+    struct Teacher {
+        uint id;
+        string name;
+    }
+
+    struct Student {
+        uint id;
         string name;
     }
 
     struct MataPelajaran {
-        string nama;
-        address guruAddress;
-        mapping(address => uint) nilaiMurid;
-        mapping(address => Murid) muridList;
+        uint id;
+        string name;
+        uint teacherID;
     }
 
-    address public admin;
-    mapping(address => Guru) public gurus;
-    mapping(address => Murid) public murids;
-    mapping(string => MataPelajaran) public mapels;
-    uint256 mapelCount;
+    mapping(address => Admin) public admins;
+    mapping(address => Teacher) public teachers;
+    mapping(address => Student) public students;
+    mapping(uint => MataPelajaran) public matapelajarans;
 
+    //testing
+    uint public adminCounter;
+    uint public teacherCounter;
+    uint public studentCounter;
+    uint public mataPelajaranCounter;
+    address public assigner;
 
     constructor() {
-        admin = msg.sender;
-        mapelCount = 0;
+        addAdmin(assigner, "Joseph Ganteng");
     }
 
-    event muridDitambahkan(address add);
-    event guruDitambahkan(address add);
-    event mapelDitambahkan(address add);
-    event guruDitambahkanMapel(address add);
-    event muridDitambahkanMapel(address add);
-    event nilaiDitambahkan(address add);
-    
+    event adminAdded(address _adminAddress, string adminName);
+    event teacherAdded(address _teacherAddress, string teacherName);
+    event studentAdded(address _studentAddress, string studentName);
+    event mataPelajaranAdded(string namaMataPelajaran);
+
+    modifier newAdmin(address _admin) {
+        require(
+            admins[_admin].exist == false,
+            "admin address already registered"
+        );
+        _;
+    }
+
+    modifier newTeacher(address _teacher) {
+        require(
+            teachers[_teacher].exist == false,
+            "teacher address already registered"
+        );
+        _;
+    }
+
+    modifier newStudent(address _student) {
+        require(
+            students[_student].exist == false,
+            "student address already registered"
+        );
+        _;
+    }
+
+    modifier mataPelajaranExist(uint _matapelajaran) {
+        require(
+            _matapelajaran < mataPelajaranCounter,
+            "mata pelajaran does not exist"
+        );
+        _;
+    }
+
     modifier onlyAdmin() {
-        require(msg.sender == admin, "Maaf anda bukan admin");
+        require(listAdmin[msg.sender], "Address is not an admin");
         _;
     }
 
-    modifier onlyGuru() {
-        require(gurus[msg.sender].guruAddress == msg.sender, "Maaf hanya guru yang bisa mengakses");
+    modifier onlyAuthorized() {
+        require(
+            listTeacher[msg.sender] || listAdmin[msg.sender],
+            "Address is not a teacher / admin"
+        );
         _;
     }
 
-    // modifier hanya untuk murid dan belum terdaftar dengan mapel
-    modifier onlyMuridNotRegistered(string memory _mapel, address _murid) {
-    Murid memory murid = mapels[_mapel].muridList[_murid];
-    require(murid.muridAddress != address(0), "Maaf hanya murid yang belum terdaftar pada mapel yang bisa mengakses");
-    _;
-}
-
-    // buatkan modifier untuk murid yang terdaftar pada mapel dan hanya bisa mengecek nilai dirinya sendiri
-    modifier onlyMurid(string memory _mapel) {
-        require(mapels[_mapel].nilaiMurid[msg.sender] > 0, "Maaf hanya murid yang terdaftar pada mapel yang bisa mengakses");
+    modifier onlyStudent() {
+        require(listStudent[msg.sender], "Address is not a student");
         _;
     }
 
+    function addAdmin(address addr, string memory _name) public newAdmin(addr) {
+        admins[addr] = Admin(adminCounter, _name, true);
+        listAdmin[msg.sender] = true;
+        adminCounter++;
 
-    // Function
-
-    // Function mendaftarkan guru baru
-    function addGuru(address _guruAddress, string memory _name) public onlyAdmin {
-        Guru memory guru = Guru(_guruAddress, _name, "Tidak");
-        gurus[_guruAddress] = guru;
-        emit guruDitambahkan(_guruAddress);
+        emit adminAdded(addr, _name);
     }
 
-    // Function mendaftarkan mata pelajaran baru
-    function addMapel(string memory _nama) public onlyAdmin {
-        MataPelajaran storage mapel = mapels[_nama];
-        mapel.nama = _nama;
-        mapel.guruAddress = address(0); // Inisialisasi dengan address(0)
+    function addTeacher(
+        address addr,
+        string memory _name
+    ) public newTeacher(addr) onlyAdmin {
+        teachers[addr] = Teacher(teacherCounter, _name, true);
+        listTeacher[msg.sender] = true;
+        teacherCounter++;
 
-        emit mapelDitambahkan(msg.sender);
+        emit teacherAdded(addr, _name);
     }
 
-    // Function mendaftarkan murid baru
-    function addMurid(address _muridAddress, string memory _name) public onlyAdmin {
-        Murid memory murid = Murid(_muridAddress, _name);
-        murids[_muridAddress] = murid;
-        emit muridDitambahkan(_muridAddress);
-    }
+    function addStudent(
+        address addr,
+        string memory _name
+    ) public newStudent(addr) onlyAuthorized {
+        students[addr] = Student(studentCounter, _name, true);
+        listStudent[msg.sender] = true;
+        studentCounter++;
 
-    // Function mengassign guru ke mapel
-    function assignGuruToMapel(string memory _mapel, address _guruAddress) public onlyAdmin {
-        MataPelajaran storage mapel = mapels[_mapel];
-        mapel.guruAddress = _guruAddress;
-        gurus[_guruAddress].assignedMapel = _mapel;
-        emit guruDitambahkanMapel(_guruAddress);
+        emit studentAdded(addr, _name);
     }
 }
