@@ -81,6 +81,11 @@ contract SchoolManagement {
         _;
     }
 
+    modifier studentExist(uint _studentID) {
+        require(_studentID < studentCounter, "student does not exist");
+        _;
+    }
+
     modifier onlyAdmin() {
         require(listAdmin[msg.sender], "Address is not an admin");
         _;
@@ -127,5 +132,76 @@ contract SchoolManagement {
         studentCounter++;
 
         emit studentAdded(addr, _name);
+    }
+
+    function addMataPelajaran(string memory _name) public {
+        matapelajarans[mataPelajaranCounter].id = mataPelajaranCounter;
+        matapelajarans[mataPelajaranCounter].name = _name;
+        mataPelajaranCounter++;
+    }
+
+    function addTeacherPelajaran(
+        address addr,
+        uint _matapelajaranID
+    ) public onlyAdmin {
+        matapelajarans[_matapelajaranID].teacherID = teachers[addr].id;
+    }
+
+    function addStudentPelajaran(
+        uint _studentID,
+        uint _matapelajaranID
+    ) public onlyAuthorized {
+        require(
+            teachers[msg.sender].id ==
+                matapelajarans[_matapelajaranID].teacherID ||
+                listAdmin[msg.sender],
+            "Address is not authorized"
+        );
+        matapelajarans[_matapelajaranID].studentID.push(_studentID);
+    }
+
+    function addScore(
+        uint _matapelajaranID,
+        uint _studentID,
+        uint _score
+    ) public onlyAuthorized {
+        require(
+            teachers[msg.sender].id ==
+                matapelajarans[_matapelajaranID].teacherID ||
+                listAdmin[msg.sender],
+            "Address is not authorized"
+        );
+        matapelajarans[_matapelajaranID].studentScores[_studentID] = _score;
+    }
+
+    function getStudentScore(
+        uint _matapelajaranID,
+        uint _studentID
+    )
+        public
+        view
+        mataPelajaranExist(_matapelajaranID)
+        studentExist(_studentID)
+        returns (uint)
+    {
+        require(
+            students[msg.sender].id == _studentID ||
+                listAdmin[msg.sender] ||
+                listTeacher[msg.sender],
+            "Address is not authorized"
+        );
+        return matapelajarans[_matapelajaranID].studentScores[_studentID];
+    }
+
+    function getMataPelajaranStudents(
+        uint _matapelajaranID
+    )
+        public
+        view
+        mataPelajaranExist(_matapelajaranID)
+        onlyAuthorized
+        returns (uint[] memory)
+    {
+        return matapelajarans[_matapelajaranID].studentID;
     }
 }
