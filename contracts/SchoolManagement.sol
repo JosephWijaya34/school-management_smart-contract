@@ -3,7 +3,6 @@
 pragma solidity ^0.8.0;
 
 contract SchoolManagement {
-
     struct Teacher {
         string name;
     }
@@ -24,10 +23,10 @@ contract SchoolManagement {
     mapping(address => Teacher) public teachers;
     mapping(address => Student) public students;
     mapping(uint => MataPelajaran) public matapelajarans;
-    mapping(address => bool) listTeacher;
-    mapping(address => bool) listStudent;
+    mapping(address => bool) public listAdmin;
+    mapping(address => bool) public listTeacher;
+    mapping(address => bool) public listStudent;
 
-    //testing
     uint public teacherCounter;
     uint public studentCounter;
     uint public mataPelajaranCounter;
@@ -35,15 +34,29 @@ contract SchoolManagement {
     constructor() {
         // set satu admin
         admin = msg.sender;
+        listAdmin[msg.sender] = true;
     }
 
     event teacherAdded(address _teacherAddress, string teacherName);
     event studentAdded(address _studentAddress, string studentName);
     event mataPelajaranAdded(string namaMataPelajaran);
+    event teacherPelajaranAdded(
+        address _teacherAddress,
+        string namaMataPelajaran
+    );
+    event studentPelajaranAdded(
+        address _studentAddress,
+        string namaMataPelajaran
+    );
+    event scoreAdded(
+        address _studentAddress,
+        string namaMataPelajaran,
+        uint score
+    );
 
     modifier newTeacher(address _teacher) {
         require(
-            teachers[_teacher].exist == false,
+            listTeacher[_teacher] == false,
             "teacher address already registered"
         );
         _;
@@ -51,7 +64,7 @@ contract SchoolManagement {
 
     modifier newStudent(address _student) {
         require(
-            students[_student].exist == false,
+            listStudent[_student] == false,
             "student address already registered"
         );
         _;
@@ -65,19 +78,19 @@ contract SchoolManagement {
         _;
     }
 
-    modifier studentExist(uint _studentID) {
-        require(_studentID < studentCounter, "student does not exist");
+    modifier studentExist(address _student) {
+        require(listStudent[_student] == true, "student does not exist");
         _;
     }
 
     modifier onlyAdmin() {
-       require(msg.sender == admin, "Only admin can call this function");
+        require(msg.sender == admin, "Only admin can call this function");
         _;
     }
 
     modifier onlyAuthorized() {
         require(
-            listTeacher[msg.sender] || admin,
+            listTeacher[msg.sender] == true || listAdmin[msg.sender] == true,
             "Address is not a teacher / admin"
         );
         _;
@@ -92,8 +105,8 @@ contract SchoolManagement {
         address addr,
         string memory _name
     ) public newTeacher(addr) onlyAdmin {
-        teachers[addr] = Teacher(teacherCounter, _name, true);
-        listTeacher[msg.sender] = true;
+        teachers[addr] = Teacher(_name);
+        listTeacher[addr] = true;
         teacherCounter++;
 
         emit teacherAdded(addr, _name);
@@ -103,70 +116,76 @@ contract SchoolManagement {
         address addr,
         string memory _name
     ) public newStudent(addr) onlyAuthorized {
-        students[addr] = Student(studentCounter, _name, true);
-        listStudent[msg.sender] = true;
+        students[addr] = Student(_name);
+        listStudent[addr] = true;
         studentCounter++;
 
         emit studentAdded(addr, _name);
     }
 
     function addMataPelajaran(string memory _name) public {
-        matapelajarans[mataPelajaranCounter].id = mataPelajaranCounter;
+        // matapelajarans[mataPelajaranCounter].id = mataPelajaranCounter;
         matapelajarans[mataPelajaranCounter].name = _name;
         mataPelajaranCounter++;
+
+        emit mataPelajaranAdded(_name);
     }
 
     function addTeacherPelajaran(
         address addr,
         uint _matapelajaranID
     ) public onlyAdmin {
-        matapelajarans[_matapelajaranID].teacherID = teachers[addr].id;
+        matapelajarans[_matapelajaranID].teacherAddress = addr;
+
+        emit teacherPelajaranAdded(addr, matapelajarans[_matapelajaranID].name);
     }
 
     function addStudentPelajaran(
-        uint _studentID,
+        address addr,
         uint _matapelajaranID
     ) public onlyAuthorized {
         require(
-            teachers[msg.sender].id ==
-                matapelajarans[_matapelajaranID].teacherID ||
-                listAdmin[msg.sender],
+            msg.sender == matapelajarans[_matapelajaranID].teacherAddress ||
+            listAdmin[msg.sender],
             "Address is not authorized"
         );
-        matapelajarans[_matapelajaranID].studentID.push(_studentID);
+        matapelajarans[_matapelajaranID].listStudent.push(addr);
+
+        emit studentPelajaranAdded(addr, matapelajarans[_matapelajaranID].name);
     }
 
     function addScore(
         uint _matapelajaranID,
-        uint _studentID,
+        address addr,
         uint _score
     ) public onlyAuthorized {
         require(
-            teachers[msg.sender].id ==
-                matapelajarans[_matapelajaranID].teacherID ||
-                listAdmin[msg.sender],
+            msg.sender == matapelajarans[_matapelajaranID].teacherAddress ||
+            listAdmin[msg.sender],
             "Address is not authorized"
         );
-        matapelajarans[_matapelajaranID].studentScores[_studentID] = _score;
+        matapelajarans[_matapelajaranID].studentScores[addr] = _score;
+
+        emit scoreAdded(addr, matapelajarans[_matapelajaranID].name, _score);
     }
 
     function getStudentScore(
         uint _matapelajaranID,
-        uint _studentID
+        address addr
     )
         public
         view
         mataPelajaranExist(_matapelajaranID)
-        studentExist(_studentID)
+        studentExist(addr)
         returns (uint)
     {
         require(
-            students[msg.sender].id == _studentID ||
+            msg.sender == addr ||
                 listAdmin[msg.sender] ||
                 listTeacher[msg.sender],
             "Address is not authorized"
         );
-        return matapelajarans[_matapelajaranID].studentScores[_studentID];
+        return matapelajarans[_matapelajaranID].studentScores[addr];
     }
 
     function getMataPelajaranStudents(
@@ -176,8 +195,8 @@ contract SchoolManagement {
         view
         mataPelajaranExist(_matapelajaranID)
         onlyAuthorized
-        returns (uint[] memory)
+        returns (address[] memory)
     {
-        return matapelajarans[_matapelajaranID].studentID;
+        return matapelajarans[_matapelajaranID].listStudent;
     }
 }
