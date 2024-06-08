@@ -1,9 +1,9 @@
 {
   "_format": "hh-sol-cache-2",
   "files": {
-    "/Users/jovan/development/school-management_smart-contract/contracts/SchoolManagement.sol": {
-      "lastModificationDate": 1717239098519,
-      "contentHash": "356751291d4cb0cc6fa1cd38e563cb1e",
+    "C:\\Users\\stefa\\Documents\\KULIAH\\Blockchain\\school-management_smart-contract\\contracts\\SchoolManagement.sol": {
+      "lastModificationDate": 1717845482131,
+      "contentHash": "cd8896f395bed2c2c803f7b0b00dd27c",
       "sourceName": "contracts/SchoolManagement.sol",
       "solcConfig": {
         "version": "0.8.24",
