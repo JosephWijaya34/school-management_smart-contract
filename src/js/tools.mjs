@@ -4,7 +4,7 @@ import { ethers } from "ethers";
 
 // We import the contract's artifacts and address here, as we are going to be
 // using them with ethers
-import VotingArtifact from "../contracts/SchoolManagement.json" with { type: "json"};
+import SMArtifact from "../contracts/SchoolManagementArtifact.json" with { type: "json"};
 import contractAddress from "../contracts/contract-address.json" with { type: "json"};
 
 //to do
@@ -17,7 +17,7 @@ const provider = new ethers.JsonRpcProvider("http://localhost:8545");
 }*/
 
 export async function constructSmartContract() {
-    return (new ethers.Contract(ethers.getAddress(contractAddress.Voting), VotingArtifact.abi, await provider.getSigner(0)));
+    return (new ethers.Contract(ethers.getAddress(contractAddress.SchoolManagement), SMArtifact.abi, await provider.getSigner(0)));
 }
 
 /*export function getAddress() {
