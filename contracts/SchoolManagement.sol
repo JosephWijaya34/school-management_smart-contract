@@ -129,14 +129,20 @@ contract SchoolManagement {
         emit studentAdded(addr, _name);
     }
 
-    function addMataPelajaran(string memory _name, address addr) public onlyAdmin {
+    function addMataPelajaran(
+        string memory _name,
+        address addr
+    ) public onlyAdmin {
         // matapelajarans[mataPelajaranCounter].id = mataPelajaranCounter;
         matapelajarans[mataPelajaranCounter].name = _name;
         matapelajarans[mataPelajaranCounter].teacherAddress = addr;
         mataPelajaranCounter++;
 
         emit mataPelajaranAdded(_name);
-        emit teacherPelajaranAdded(addr, matapelajarans[mataPelajaranCounter].name);
+        emit teacherPelajaranAdded(
+            addr,
+            matapelajarans[mataPelajaranCounter].name
+        );
     }
 
     // function addTeacherPelajaran(
@@ -154,7 +160,7 @@ contract SchoolManagement {
     ) public onlyAuthorized {
         require(
             msg.sender == matapelajarans[_matapelajaranID].teacherAddress ||
-            listAdmin[msg.sender],
+                listAdmin[msg.sender],
             "Address is not authorized"
         );
         matapelajarans[_matapelajaranID].listStudent.push(addr);
@@ -169,7 +175,7 @@ contract SchoolManagement {
     ) public onlyAuthorized {
         require(
             msg.sender == matapelajarans[_matapelajaranID].teacherAddress ||
-            listAdmin[msg.sender],
+                listAdmin[msg.sender],
             "Address is not authorized"
         );
         matapelajarans[_matapelajaranID].studentScores[addr] = _score;

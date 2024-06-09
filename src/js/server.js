@@ -25,6 +25,14 @@ app.set("view engine", "ejs");
 app.use(express.static(path.join(__dirname, "public")));
 
 app.get("/", function (request, response) {
+  response.render("home");
+});
+
+app.get("/home", function (request, response) {
+  response.render("home");
+});
+
+app.get("/login", function (request, response) {
   response.render("login");
 });
 
@@ -34,6 +42,25 @@ app.get("/createTeacher", function (request, response) {
 
 app.get("/createStudent", function (request, response) {
   response.render("registerStudent", {});
+});
+
+app.post('/auth', async (request, response) => {
+  var addr = request.body.address;
+  // var pwd = request.body.password;
+
+  try {
+      RC.getVoter(addr).then(function(res) {
+          console.log(res);
+          if(res == true) {
+              response.cookie('addr', addr);
+              response.redirect('/voting');
+          } else {
+              response.send();
+          }
+      });
+  } catch(err) {
+      console.log(err);
+  }
 });
 
 app.post("/createTeacher", async (request, response) => {
@@ -176,6 +203,6 @@ app.post("/createSubject", async (request, response) => {
 //     }
 // });
 
-app.listen(8000, async (request, response) => {
-  console.log("I'm listening");
+app.listen(3000, async (request, response) => {
+  console.log("I'm listening on port 3000");
 });
