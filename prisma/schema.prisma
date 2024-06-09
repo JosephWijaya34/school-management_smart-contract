@@ -1,0 +1,61 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// Define the Teacher model
+model Teacher {
+  id       String          @id @default(cuid()) // Use cuid for unique id generation
+  name     String
+  address  String          @unique
+  subjects MataPelajaran[] @relation("TeacherSubjects")
+}
+
+// Define the Student model
+model Student {
+  id       String            @id @default(cuid()) // Use cuid for unique id generation
+  name     String
+  address  String            @unique
+  subjects StudentSubjects[] @relation("StudentSubjects")
+  scores   StudentScore[]
+}
+
+// Define the MataPelajaran model
+model MataPelajaran {
+  id             String            @id @default(cuid()) // Use cuid for unique id generation
+  name           String
+  teacher        Teacher           @relation("TeacherSubjects", fields: [teacherAddress], references: [address])
+  teacherAddress String // Foreign key to the Teacher model
+  students       StudentSubjects[] @relation("StudentSubjects")
+  studentScores  StudentScore[]
+}
+
+// Define the pivot table for the many-to-many relation between Student and MataPelajaran
+model StudentSubjects {
+  studentId String
+  subjectId String
+  student   Student       @relation("StudentSubjects", fields: [studentId], references: [id])
+  subject   MataPelajaran @relation("StudentSubjects", fields: [subjectId], references: [id])
+
+  @@id([studentId, subjectId])
+}
+
+// Define the model for storing student scores
+model StudentScore {
+  id        String        @id @default(cuid()) // Use cuid for unique id generation
+  student   Student       @relation(fields: [studentId], references: [id])
+  subject   MataPelajaran @relation(fields: [subjectId], references: [id])
+  studentId String
+  subjectId String
+  score     Int
+}
