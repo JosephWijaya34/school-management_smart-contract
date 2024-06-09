@@ -49,11 +49,11 @@ app.post('/auth', async (request, response) => {
   // var pwd = request.body.password;
 
   try {
-      RC.getVoter(addr).then(function(res) {
+      RC.getTeacher(addr).then(function(res) {
           console.log(res);
           if(res == true) {
               response.cookie('addr', addr);
-              response.redirect('/voting');
+              response.redirect('/manageSubject');
           } else {
               response.send();
           }

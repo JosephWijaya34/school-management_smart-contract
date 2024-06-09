@@ -113,6 +113,16 @@ contract SchoolManagement {
         emit teacherAdded(addr, _name);
     }
 
+    function getTeacher(
+        address addr
+    ) public view returns (bool) {
+        if (listTeacher[addr] == true) {
+            return (true);
+        } else {
+            return (false);
+        }
+    }
+
     function checkTeachers(address addr) public view returns (bool) {
         console.log("Teacher Name: ", teachers[addr].name);
         return listTeacher[addr];
