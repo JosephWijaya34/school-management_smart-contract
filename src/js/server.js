@@ -4,7 +4,10 @@ import cookieParser from "cookie-parser";
 import bodyParser from "body-parser";
 import path from "path";
 import { fileURLToPath } from "url";
+import { PrismaClient } from "@prisma/client";
+import axios from "axios";
 
+const prisma = new PrismaClient();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -22,29 +25,110 @@ app.set("view engine", "ejs");
 app.use(express.static(path.join(__dirname, "public")));
 
 app.get("/", function (request, response) {
-  response.render("index");
+  response.render("login");
 });
 
-app.post("/registration", async (request, response) => {
+app.get("/createTeacher", function (request, response) {
+  response.render("registerTeacher", {});
+});
+
+app.get("/createStudent", function (request, response) {
+  response.render("registerStudent", {});
+});
+
+app.post("/createTeacher", async (request, response) => {
   var addr = request.body.address;
   var name = request.body.name;
   try {
     let tx = await RC.addTeacher(addr, name);
     console.log(tx);
-    response.send(
-      "<p id='accountAddress'>Successfully Registered: " + addr + "</p>"
-    );
-    response.render("login");
+
+    axios
+      .post("http://localhost:3000/teachers", {
+        address: addr,
+        name: name,
+      })
+      .then((response) => {
+        console.log("Data guru berhasil disisipkan:", response.data);
+      })
+      .catch((error) => {
+        console.error("Error memanggil endpoint:", error);
+      });
+
+    response.redirect("/");
   } catch (err) {
+    response.redirect("/createTeacher");
+    // response.render("registerTeacher");
     console.log(err);
   }
 });
 
-app.get("/login", function (request, response) {
+app.post("/createStudent", async (request, response) => {
   var addr = request.body.address;
-  let tx = RC.checkTeachers(addr);
-  response.render("pages/login", {});
-})
+  var name = request.body.name;
+  try {
+    let tx = await RC.addStudent(addr, name);
+    console.log(tx);
+    // Simpan data student ke database
+    axios
+      .post("http://localhost:3000/students", {
+        address: addr,
+        name: name,
+      })
+      .then((response) => {
+        console.log("Data murid berhasil disisipkan:", response.data);
+      })
+      .catch((error) => {
+        console.error("Error memanggil endpoint:", error);
+      });
+    response.redirect("/");
+  } catch (err) {
+    response.redirect("/createStudent");
+    // response.render("registerStudent");
+    console.log(err);
+  }
+});
+
+app.get("/manageSubject", async (request, response) => {
+  // let teachers = await RC.getTeachers();
+  let teachers = await prisma.teacher.findMany();
+  let pelajarans = await prisma.mataPelajaran.findMany();
+  let murids = await prisma.student.findMany();
+  response.render("manage", { teachers: teachers.length ? teachers : [], subjects: pelajarans.length ? pelajarans : [], students: murids.length ? murids : [] });
+});
+
+app.post("/createSubject", async (request, response) => {
+  var name = request.body.subjectName;
+  var teacherAddress = request.body.teacherAddress;
+  console.log(name);
+  console.log(teacherAddress);
+  try {
+    let tx = await RC.addMataPelajaran(name, teacherAddress);
+    console.log(tx);
+    // Simpan data mata pelajaran ke database
+    axios
+      .post("http://localhost:3000/matapelajarans", {
+        name: name,
+        teacherAddress: teacherAddress,
+      })
+      .then((response) => {
+        console.log("Data mata pelajaran berhasil disisipkan:", response.data);
+      })
+      .catch((error) => {
+        console.error("Error memanggil endpoint:", error);
+      });
+    response.redirect("/manageSubject");
+  } catch (err) {
+    response.redirect("/manageSubject");
+    console.log(err);
+  }
+});
+
+// app.get("/login", function (request, response) {
+//   var addr = request.body.address;
+//   let tx = RC.checkTeachers(addr);
+//   response.render("pages/login", {});
+// })
 
 // app.post('/auth', async (request, response) => {
 //     var addr = request.body.address;
@@ -92,6 +176,6 @@ app.get("/login", function (request, response) {
 //     }
 // });
 
-app.listen(3000, async (request, response) => {
+app.listen(8000, async (request, response) => {
   console.log("I'm listening");
 });

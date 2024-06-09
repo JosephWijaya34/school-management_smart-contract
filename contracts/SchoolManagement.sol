@@ -129,22 +129,24 @@ contract SchoolManagement {
         emit studentAdded(addr, _name);
     }
 
-    function addMataPelajaran(string memory _name) public {
+    function addMataPelajaran(string memory _name, address addr) public onlyAdmin {
         // matapelajarans[mataPelajaranCounter].id = mataPelajaranCounter;
         matapelajarans[mataPelajaranCounter].name = _name;
+        matapelajarans[mataPelajaranCounter].teacherAddress = addr;
         mataPelajaranCounter++;
 
         emit mataPelajaranAdded(_name);
+        emit teacherPelajaranAdded(addr, matapelajarans[mataPelajaranCounter].name);
     }
 
-    function addTeacherPelajaran(
-        address addr,
-        uint _matapelajaranID
-    ) public onlyAdmin {
-        matapelajarans[_matapelajaranID].teacherAddress = addr;
+    // function addTeacherPelajaran(
+    //     address addr,
+    //     uint _matapelajaranID
+    // ) public onlyAdmin {
+    //     matapelajarans[_matapelajaranID].teacherAddress = addr;
 
-        emit teacherPelajaranAdded(addr, matapelajarans[_matapelajaranID].name);
-    }
+    //     emit teacherPelajaranAdded(addr, matapelajarans[_matapelajaranID].name);
+    // }
 
     function addStudentPelajaran(
         address addr,

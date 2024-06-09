@@ -1,10 +1,48 @@
 {
   "_format": "hh-sol-cache-2",
   "files": {
-    "C:\\Users\\stefa\\Documents\\KULIAH\\Blockchain\\school-management_smart-contract\\contracts\\SchoolManagement.sol": {
-      "lastModificationDate": 1717845482131,
-      "contentHash": "cd8896f395bed2c2c803f7b0b00dd27c",
+    "C:\\Users\\Reynaldo\\Documents\\KULIAH\\Blockchain\\ALP\\school-management_smart-contract\\contracts\\SchoolManagement.sol": {
+      "lastModificationDate": 1717933753198,
+      "contentHash": "ddd301a72f9bb28d988d511f29272938",
       "sourceName": "contracts/SchoolManagement.sol",
+      "solcConfig": {
+        "version": "0.8.24",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "hardhat/console.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "SchoolManagement"
+      ]
+    },
+    "C:\\Users\\Reynaldo\\Documents\\KULIAH\\Blockchain\\ALP\\school-management_smart-contract\\node_modules\\hardhat\\console.sol": {
+      "lastModificationDate": 1717041700614,
+      "contentHash": "896f68942c3a20e9ae3c3c5bfd3add54",
+      "sourceName": "hardhat/console.sol",
       "solcConfig": {
         "version": "0.8.24",
         "settings": {
@@ -31,10 +69,10 @@
       },
       "imports": [],
       "versionPragmas": [
-        "^0.8.0"
+        ">=0.4.22 <0.9.0"
       ],
       "artifacts": [
-        "SchoolManagement"
+        "console"
       ]
     }
   }
