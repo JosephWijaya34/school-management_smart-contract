@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: UNLICENSED
-
 pragma solidity ^0.8.0;
+
+import "hardhat/console.sol";
 
 contract SchoolManagement {
     struct Teacher {
@@ -110,6 +111,11 @@ contract SchoolManagement {
         teacherCounter++;
 
         emit teacherAdded(addr, _name);
+    }
+
+    function checkTeachers(address addr) public view returns (bool) {
+        console.log("Teacher Name: ", teachers[addr].name);
+        return listTeacher[addr];
     }
 
     function addStudent(

@@ -41,8 +41,10 @@ app.post("/registration", async (request, response) => {
 });
 
 app.get("/login", function (request, response) {
+  var addr = request.body.address;
+  let tx = RC.checkTeachers(addr);
   response.render("pages/login", {});
-});
+})
 
 // app.post('/auth', async (request, response) => {
 //     var addr = request.body.address;
