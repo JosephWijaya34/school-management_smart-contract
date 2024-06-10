@@ -53,6 +53,7 @@ app.post("/auth", async (request, response) => {
     let tx = await RC.getTeacher(addr);
     let tx2 = await RC.getStudent(addr);
     console.log(tx);
+    console.log(tx2);
     if (tx == true) {
       response.cookie("addr", addr);
       console.log(`Teacher with ${addr}`);
@@ -180,29 +181,56 @@ app.get("/student-dashboard", async (request, response) => {
   const addr = request.cookies.addr;
   console.log("Student address: ", addr);
   try {
-    // let studentSubjectIds = await RC.getStudentMataPelajarans(addr);
-    // console.log("Student Subject IDs: ", studentSubjectIds);
-    // get the student by address
+    // Fetch student data by address
     let student = await RC.getStudentData(addr);
-
-    let subjects;
-    subjects = await prisma.studentSubjects.findMany({
-      where: {
-          studentId: student.id,
-        },
-    });
-
-    let listSubject;
-    if (subjects.length) {
-      listSubject = await prisma.mataPelajaran.findMany({
-        where: {
-          id: {
-            in: subjects.map((subject) => subject.subjectId),
-          },
-        },
-      });
+    if (!student) {
+      response.status(404).send("Student not found");
+      return;
     }
 
+    // Fetch student data from Prisma
+    student = await prisma.student.findUnique({
+      where: {
+        address: addr,
+      },
+    });
+    if (!student) {
+      response.status(404).send("Student not found in database");
+      return;
+    }
+    console.log("Student: ", student.name);
+
+    // Fetch subjects associated with the student
+    let subjects = await prisma.studentSubjects.findMany({
+      where: {
+        studentId: student.id,
+      },
+    });
+
+    // Log each subject
+    subjects.forEach((subject) => {
+      console.log(subject);
+    });
+
+    // Fetch detailed subject information
+    let listSubjectPromises = subjects.map(async (sub) => {
+      console.log(sub.subjectId);
+      let temp = await prisma.MataPelajaran.findUnique({
+        where: {
+          id: sub.subjectId,
+        },
+      });
+      return temp;
+    });
+
+    let listSubject = await Promise.all(listSubjectPromises);
+
+    // Log each subject's name
+    listSubject.forEach((subject) => {
+      console.log("List of subjects: ", subject ? subject.name : "undefined");
+    });
+
+    // Render the student dashboard
     response.render("student-dashboard", {
       subjects: listSubject.length ? listSubject : [],
     });
