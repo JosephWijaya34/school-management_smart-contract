@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "/Users/jovan/development/school-management_smart-contract/contracts/SchoolManagement.sol": {
-      "lastModificationDate": 1718006089492,
-      "contentHash": "8f1f10bfc96dc348a04656d73b3113a1",
+      "lastModificationDate": 1718016994819,
+      "contentHash": "66a9c1277579c528d9e9d10f41bef502",
       "sourceName": "contracts/SchoolManagement.sol",
       "solcConfig": {
         "version": "0.8.24",
