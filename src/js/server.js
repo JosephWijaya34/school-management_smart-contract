@@ -47,7 +47,6 @@ app.get("/register-student", function (request, response) {
 
 app.post("/auth", async (request, response) => {
   var addr = request.body.address;
-  // var pwd = request.body.password;
 
   try {
     let tx = await RC.getTeacher(addr);
