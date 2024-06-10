@@ -32,7 +32,7 @@ model Student {
 
 // Define the MataPelajaran model
 model MataPelajaran {
-  id             String            @id @default(cuid()) // Use cuid for unique id generation
+  id             Int            @id @default(autoincrement()) // Use cuid for unique id generation
   name           String
   teacher        Teacher           @relation("TeacherSubjects", fields: [teacherAddress], references: [address])
   teacherAddress String // Foreign key to the Teacher model
@@ -43,7 +43,7 @@ model MataPelajaran {
 // Define the pivot table for the many-to-many relation between Student and MataPelajaran
 model StudentSubjects {
   studentId String
-  subjectId String
+  subjectId Int
   student   Student       @relation("StudentSubjects", fields: [studentId], references: [id])
   subject   MataPelajaran @relation("StudentSubjects", fields: [subjectId], references: [id])
 
@@ -56,6 +56,6 @@ model StudentScore {
   student   Student       @relation(fields: [studentId], references: [id])
   subject   MataPelajaran @relation(fields: [subjectId], references: [id])
   studentId String
-  subjectId String
+  subjectId Int
   score     Int
 }
