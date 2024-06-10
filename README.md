@@ -6,6 +6,7 @@ npm install
 # database setup / schema change
 cp .env.development .env
 npx prisma generate
+npx prisma db push --force-reset
 
 # contract code change
 npx hardhat compile
