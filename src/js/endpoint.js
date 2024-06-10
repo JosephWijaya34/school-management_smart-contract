@@ -108,12 +108,12 @@ app.post('/scores', async (req, res) => {
 });
 
 // Endpoint untuk mendapatkan skor siswa
-app.get('/studentScores', async (req, res) => {
+app.get('/scores', async (req, res) => {
   const { studentAddress, mataPelajaranId } = req.query;
   try {
       const studentScore = await prisma.studentScore.findUnique({
           where: {
-              studentId_subjectId: { studentId: studentAddress, subjectId: mataPelajaranId },
+              studentId_subjectId: { studentId: studentAddress, subjectId: parseInt(mataPelajaranId) },
           },
       });
       res.json(studentScore);

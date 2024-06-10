@@ -1,316 +1,264 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Admin Dashboard</title>
-    <link
-      href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css"
-      rel="stylesheet"
-    />
-  </head>
 
-  <body class="flex flex-col min-h-screen">
-    <!-- header section -->
-    <header class="fixed top-0 w-full max-h-[100px] z-20 bg-violet-900">
-      <h1
-        class="flex text-center justify-center text-4xl font-bold my-4 text-white"
-      >
-        Admin Dashboard
-      </h1>
-    </header>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css" rel="stylesheet" />
+</head>
 
-    <!-- content -->
-    <div
-      class="flex flex-col flex-grow justify-center items-center md:mt-[110px] mt-[120px]"
-    >
-      <main class="flex-grow p-2 md:p-5 w-[80%]">
-        <div class="flex flex-col justify-center items-center w-full">
-          <!-- List Guru -->
-          <div
-            id=""
-            class="mb-8 bg-white shadow-md rounded-lg border border-gray-200 p-6"
-          >
-            <!-- title -->
-            <div class="flex items-center justify-start">
-              <h1 class="font-bold text-2xl py-5">List Guru</h1>
-            </div>
-            <!-- list -->
-            <div
-              class="p-4 bg-white border shadow-md min-h-40 rounded-lg overflow-x-auto text-center"
-            >
-              <table class="min-w-full divide-y divide-gray-300">
-                <thead class="bg-gray-50">
-                  <tr>
-                    <th
-                      scope="col"
-                      class="py-3 pl-4 pr-3 text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6"
-                    >
-                      No
-                    </th>
-                    <th
-                      scope="col"
-                      class="py-3 pl-4 pr-3 text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6"
-                    >
-                      Nama Guru
-                    </th>
-                  </tr>
-                </thead>
-                <tbody class="divide-y divide-gray-200 bg-white">
-                  <% if (teachers.length === 0) { %>
+<body class="flex flex-col min-h-screen">
+  <!-- header section -->
+  <header class="fixed top-0 w-full max-h-[100px] z-20 bg-violet-900">
+    <h1 class="flex text-center justify-center text-4xl font-bold my-4 text-white">
+      Admin Dashboard
+    </h1>
+  </header>
+
+  <!-- content -->
+  <div class="flex flex-col flex-grow justify-center items-center md:mt-[110px] mt-[120px]">
+    <main class="flex-grow p-2 md:p-5 w-[80%]">
+      <div class="flex flex-col justify-center items-center w-full">
+        <!-- List Guru -->
+        <div id="" class="mb-8 bg-white shadow-md rounded-lg border border-gray-200 p-6">
+          <!-- title -->
+          <div class="flex items-center justify-start">
+            <h1 class="font-bold text-2xl py-5">List Guru</h1>
+          </div>
+          <!-- list -->
+          <div class="p-4 bg-white border shadow-md min-h-40 rounded-lg overflow-x-auto text-center">
+            <table class="min-w-full divide-y divide-gray-300">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th scope="col"
+                    class="py-3 pl-4 pr-3 text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6">
+                    No
+                  </th>
+                  <th scope="col"
+                    class="py-3 pl-4 pr-3 text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6">
+                    Nama Guru
+                  </th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-200 bg-white">
+                <% if (teachers.length===0) { %>
                   <tr>
                     <td colspan="6" class="px-6 py-4 text-center">
                       Tidak ada guru
                     </td>
                   </tr>
-                  <% } %> <% if (teachers.length > 0) { %>
-                  <!-- LIST GURU -->
-                  <% teachers.forEach(function(teacher, index) { %>
-                  <% teachers.forEach(function(teacher, index) { %>
-                  <tr>
-                    <td
-                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6"
-                    >
-                      <%= index + 1 %>
-                    </td>
-                    <td
-                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6"
-                    >
-                      <a href="#">
-                        <%= teacher.name %>
-                      </a>
-                    </td>
-                  </tr>
-                  <% }); %> <% } %>
-                </tbody>
-              </table>
-            </div>
+                  <% } %>
+                    <% if (teachers.length> 0) { %>
+                      <!-- LIST GURU -->
+                      <% teachers.forEach(function(teacher, index) { %>
+                        <tr>
+                          <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
+                            <%= index + 1 %>
+                          </td>
+                          <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
+                            <a href="#">
+                              <%= teacher.name %>
+                            </a>
+                          </td>
+                        </tr>
+                        <% }); %>
+                          <% } %>
+              </tbody>
+            </table>
           </div>
+        </div>
 
-          <!-- List pelajaran -->
-          <div
-            id=""
-            class="mb-8 bg-white shadow-md rounded-lg border border-gray-200 p-6"
-          >
-            <!-- title -->
-            <div class="flex items-center justify-start">
-              <h1 class="font-bold text-2xl py-5">List Pelajaran</h1>
-            </div>
-            <!-- list -->
-            <div
-              class="p-4 bg-white border shadow-md min-h-40 rounded-lg overflow-x-auto text-center"
-            >
-              <table class="min-w-full divide-y divide-gray-300">
-                <thead class="bg-gray-50">
-                  <tr>
-                    <th
-                      scope="col"
-                      class="py-3 pl-4 pr-3 text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6"
-                    >
-                      No
-                    </th>
-                    <th
-                      scope="col"
-                      class="py-3 pl-4 pr-3 text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6"
-                    >
-                      Nama Pelajaran
-                    </th>
-                  </tr>
-                </thead>
-                <tbody class="divide-y divide-gray-200 bg-white">
-                  <% if (subjects.length === 0) { %>
+        <!-- List pelajaran -->
+        <div id="" class="mb-8 bg-white shadow-md rounded-lg border border-gray-200 p-6">
+          <!-- title -->
+          <div class="flex items-center justify-start">
+            <h1 class="font-bold text-2xl py-5">List Pelajaran</h1>
+          </div>
+          <!-- list -->
+          <div class="p-4 bg-white border shadow-md min-h-40 rounded-lg overflow-x-auto text-center">
+            <table class="min-w-full divide-y divide-gray-300">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th scope="col"
+                    class="py-3 pl-4 pr-3 text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6">
+                    No
+                  </th>
+                  <th scope="col"
+                    class="py-3 pl-4 pr-3 text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6">
+                    Nama Pelajaran
+                  </th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-200 bg-white">
+                <% if (subjects.length===0) { %>
                   <tr>
                     <td colspan="6" class="px-6 py-4 text-center">
                       Tidak ada pelajaran
                     </td>
                   </tr>
-                  <% } %> <% if (subjects.length > 0) { %>
-                  <!-- LIST SUBJECT -->
-                  <% subjects.forEach(function(pelajaran, index) { %>
-                  <tr>
-                    <td
-                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6"
-                    >
-                      <%= index + 1 %>
-                    </td>
-                    <td
-                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6"
-                    >
-                      <a href="/subject/<%= pelajaran.id %>">
-                        <%= pelajaran.name %>
-                      </a>
-                    </td>
-                  </tr>
-                  <% }); %> <% } %>
-                </tbody>
-              </table>
-            </div>
+                  <% } %>
+                    <% if (subjects.length> 0) { %>
+                      <!-- LIST SUBJECT -->
+                      <% subjects.forEach(function(pelajaran, index) { %>
+                        <tr>
+                          <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
+                            <%= index + 1 %>
+                          </td>
+                          <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
+                            <a href="/subject/<%= pelajaran.id %>">
+                              <%= pelajaran.name %>
+                            </a>
+                          </td>
+                        </tr>
+                        <% }); %>
+                          <% } %>
+              </tbody>
+            </table>
           </div>
+        </div>
 
-          <!-- Student list -->
-          <div
-            id=""
-            class="mb-8 bg-white shadow-md rounded-lg border border-gray-200 p-6"
-          >
-            <!-- title -->
-            <div class="flex items-center justify-start">
-              <h1 class="font-bold text-2xl py-5">List Murid</h1>
-            </div>
-            <!-- list -->
-            <div
-              class="p-4 bg-white border shadow-md min-h-40 rounded-lg overflow-x-auto text-center"
-            >
-              <table class="min-w-full divide-y divide-gray-300">
-                <thead class="bg-gray-50">
-                  <tr>
-                    <th
-                      scope="col"
-                      class="py-3 pl-4 pr-3 text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6"
-                    >
-                      No
-                    </th>
-                    <th
-                      scope="col"
-                      class="py-3 pl-4 pr-3 text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6"
-                    >
-                      Nama Murid
-                    </th>
-                  </tr>
-                </thead>
-                <tbody class="divide-y divide-gray-200 bg-white">
-                  <% if (students.length === 0) { %>
+        <!-- Student list -->
+        <div id="" class="mb-8 bg-white shadow-md rounded-lg border border-gray-200 p-6">
+          <!-- title -->
+          <div class="flex items-center justify-start">
+            <h1 class="font-bold text-2xl py-5">List Murid</h1>
+          </div>
+          <!-- list -->
+          <div class="p-4 bg-white border shadow-md min-h-40 rounded-lg overflow-x-auto text-center">
+            <table class="min-w-full divide-y divide-gray-300">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th scope="col"
+                    class="py-3 pl-4 pr-3 text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6">
+                    No
+                  </th>
+                  <th scope="col"
+                    class="py-3 pl-4 pr-3 text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6">
+                    Nama Murid
+                  </th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-200 bg-white">
+                <% if (students.length===0) { %>
                   <tr>
                     <td colspan="6" class="px-6 py-4 text-center">
                       Tidak ada Siswa
                     </td>
                   </tr>
-                  <% } %> <% if (students.length > 0) { %>
-                  <!-- LIST STUDENTS -->
-                  <% students.forEach(function(murid, index) { %>
-                  <tr>
-                    <td
-                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6"
-                    >
-                      <%= index + 1 %>
-                    </td>
-                    <td
-                      class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6"
-                    >
-                      <%= murid.name %>
-                    </td>
-                  </tr>
-                  <% }); %> <% } %>
-                </tbody>
-              </table>
-            </div>
+                  <% } %>
+                    <% if (students.length> 0) { %>
+                      <!-- LIST STUDENTS -->
+                      <% students.forEach(function(murid, index) { %>
+                        <tr>
+                          <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
+                            <%= index + 1 %>
+                          </td>
+                          <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
+                            <%= murid.name %>
+                          </td>
+                        </tr>
+                        <% }); %>
+                          <% } %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- assign Teacher -->
+        <div id="" class="mb-12 bg-white shadow-md rounded-lg border border-gray-200 p-6 w-full">
+          <!-- title -->
+          <div class="flex items-center justify-start">
+            <h1 class="font-bold text-2xl py-5">Assign Teacher</h1>
           </div>
 
-          <!-- Section for adding a student to a subject -->
-          <div
-            class="max-w-md mx-auto w-full flex flex-col justify-center items-center mt-5"
-          >
-            <h1 class="text-4xl font-bold mb-5">Assign Teacher</h1>
-            <form
-              class="max-w-md mx-auto w-full flex flex-col justify-center items-center"
-              method="POST"
-              action="create-subject"
-            >
+          <div>
+            <form class="max-w-md mx-auto w-full flex flex-col justify-center items-center" method="POST"
+              action="create-subject">
               <div class="relative z-0 w-full mb-5 group">
-                <input
-                  type="text"
-                  name="subjectName"
-                  id="subjectName"
-                  class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none  focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                  placeholder=" "
-                  required
-                />
-                <label
-                  for="subjectName"
-                  class="peer-focus:font-medium absolute text-sm text-gray-500  duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                >
+                <input type="text" name="subjectName" id="subjectName"
+                  class="block py-2.5 px-0 w-full text-sm text-black bg-transparent border-0 border-b-2 border-gray-300 appearance-none  focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                  placeholder=" " required />
+                <label for="subjectName"
+                  class="peer-focus:font-medium absolute text-sm text-black duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                   Pelajaran
                 </label>
                 <!-- dropdown guru untuk dipilih -->
-                <select
-                  name="teacherAddress"
-                  id="teacherAddress"
-                  class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                  required
-                >
+                <select name="teacherAddress" id="teacherAddress"
+                  class="block py-2.5 px-0 w-full text-sm text-black bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                  required>
                   <option value="" disabled selected>Pilih Guru</option>
                   <% teachers.forEach(function(teacher) { %>
-                  <option value="<%= teacher.address %>">
-                    <%= teacher.name %>
-                  </option>
-                  <% }); %>
+                    <option value="<%= teacher.address %>">
+                      <%= teacher.name %>
+                    </option>
+                    <% }); %>
                 </select>
               </div>
-              <button
-                type="submit"
-                class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
-              >
+              <button type="submit"
+                class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center">
                 Submit
               </button>
             </form>
-            <h1 class="text-4xl font-bold mb-5">Assign Student</h1>
-            <form
-              class="max-w-md mx-auto w-full flex flex-col justify-center items-center"
-              method="POST"
-              action="add-student-to-subject"
-            >
+          </div>
+        </div>
+
+        <!-- assign Student -->
+        <div id="" class="mb-12 bg-white shadow-md rounded-lg border border-gray-200 p-6 w-full">
+          <!-- title -->
+          <div class="flex items-center justify-start">
+            <h1 class="font-bold text-2xl py-5">Assign Student</h1>
+          </div>
+
+          <div>
+            <form class="max-w-md mx-auto w-full flex flex-col justify-center items-center" method="POST"
+              action="add-student-to-subject">
               <div class="relative z-0 w-full mb-5 group">
                 <!-- dropdown murid untuk dipilih -->
-                <select
-                  name="studentAddress"
-                  id="studentAddress"
-                  class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                  required
-                >
+                <select name="studentAddress" id="studentAddress"
+                  class="block py-2.5 px-0 w-full text-sm text-black bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                  required>
                   <option value="" disabled selected>Pilih Murid</option>
                   <% students.forEach(function(murid) { %>
-                  <option value="<%= murid.address %>">
-                    <%= murid.name %>
-                  </option>
-                  <% }); %>
+                    <option value="<%= murid.address %>">
+                      <%= murid.name %>
+                    </option>
+                    <% }); %>
                 </select>
               </div>
               <div class="relative z-0 w-full mb-5 group">
                 <!-- dropdown pelajaran untuk dipilih -->
-                <select
-                  name="mataPelajaranId"
-                  id="mataPelajaranId"
-                  class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                  required
-                >
+                <select name="mataPelajaranId" id="mataPelajaranId"
+                  class="block py-2.5 px-0 w-full text-sm text-black bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                  required>
                   <option value="" disabled selected>Pilih Pelajaran</option>
                   <% subjects.forEach(function(pelajaran) { %>
-                  <option value="<%= pelajaran.id %>">
-                    <%= pelajaran.name %>
-                  </option>
-                  <% }); %>
+                    <option value="<%= pelajaran.id %>">
+                      <%= pelajaran.name %>
+                    </option>
+                    <% }); %>
                 </select>
               </div>
-              <button
-                type="submit"
-                class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center "
-              >
+              <button type="submit"
+                class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center ">
                 Add Student to Subject
               </button>
             </form>
           </div>
         </div>
-      </main>
-    </div>
 
-    <!-- footer -->
-    <footer
-      class="fixed bottom-0 w-full bg-zinc-900 py-4 text-center text-gray-500"
-    >
-      <p class="text-white">&copy; 2024 - Joseph || Reynaldo || Jovan</p>
-    </footer>
+      </div>
+    </main>
+  </div>
 
-    <!-- javascript -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
-  </body>
+  <!-- footer -->
+  <footer class="fixed bottom-0 w-full bg-zinc-900 py-4 text-center text-gray-500">
+    <p class="text-white">&copy; 2024 - Joseph || Reynaldo || Jovan</p>
+  </footer>
+
+  <!-- javascript -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+</body>
+
 </html>

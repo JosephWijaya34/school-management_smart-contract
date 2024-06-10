@@ -136,34 +136,52 @@
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-gray-200 bg-white">
-                                <% if (students.length===0) { %>
+                                <% if (students.length === 0) { %>
                                     <tr>
-                                        <td colspan="6" class="px-6 py-4 text-center">Tidak ada Siswa</td>
+                                        <td colspan="4" class="px-6 py-4 text-center">Tidak ada Siswa</td>
                                     </tr>
-                                    <% }%>
-                                        <% if (students.length> 0){ %>
-                                            <!-- list siswa -->
-                                            <% students.forEach(function(murid, index) { %>
+                                <% } else { %>
+                                    <!-- Loop through each student -->
+                                    <% students.forEach(function(student, index) { %>
+                                        <!-- Check if the student has scores -->
+                                        <% console.log("student.name:",student.name); %>
+                                        <% const studentScores = subjectsWithScores.find(subject => subject.student === student.name); %>
+                                        <% console.log("studentScores:",studentScores); %>
+                                        <% if (studentScores) { %>
+                                            <!-- Loop through each score of the student -->
+                                            <% studentScores.scoresWithDetails.forEach(function(score) { %>
                                                 <tr>
-                                                    <td
-                                                        class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
+                                                    <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
                                                         <%= index + 1 %>
                                                     </td>
-                                                    <td
-                                                        class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-                                                        <%= murid.name %>
+                                                    <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
+                                                        <% console.log("student.name:", student.name); %>
+                                                        <%= student.name %>
                                                     </td>
-                                                    <td
-                                                        class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-                                                        <p class="text-lg">Nama pelajaran</p>
+                                                    <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
+                                                        <% console.log("student.name:", score.subject); %>
+                                                        <%= score.subject %>
                                                     </td>
-                                                    <td
-                                                        class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-                                                        <p class="text-lg">Score</p>
+                                                    <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
+                                                        <% console.log("score.score:", score.subject); %>
+                                                        <%= score.score %>
                                                     </td>
                                                 </tr>
-                                                <% }); %>
-                                                    <% } %>
+                                            <% }); %>
+                                        <% } else { %>
+                                            <!-- If the student has no scores -->
+                                            <tr>
+                                                <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
+                                                    <%= index + 1 %>
+                                                </td>
+                                                <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
+                                                    <%= student.name %>
+                                                </td>
+                                                <td colspan="2" class="px-6 py-4 text-center">Tidak ada Skor</td>
+                                            </tr>
+                                        <% } %>
+                                    <% }); %>
+                                <% } %>
                             </tbody>
                         </table>
                     </div>
@@ -173,10 +191,6 @@
                         <table class="min-w-full divide-y divide-gray-300">
                             <thead class="bg-gray-50 ">
                                 <tr>
-                                    <th scope="col"
-                                        class="py-3 pl-4 pr-3 text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6">
-                                        No
-                                    </th>
                                     <th scope="col"
                                         class="py-3 pl-4 pr-3 text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6">
                                         Nama Siswa
@@ -203,12 +217,7 @@
                                     <% }%>
                                         <% if (students.length> 0){ %>
                                             <!-- LIST SUBJECT -->
-                                            <% students.forEach(function(murid, index) { %>
                                                 <tr>
-                                                    <td
-                                                        class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-                                                        <%= index + 1 %>
-                                                    </td>
                                                     <form method="POST" action="scores">
                                                         <td
                                                             class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
@@ -218,6 +227,7 @@
                                                                 <option value="" disabled selected>Pilih Mahasiswa
                                                                 </option>
                                                                 <% students.forEach(function(student) { %>
+                                                                    <!-- if students have scores -->
                                                                     <option value="<%= student.id %>">
                                                                         <%= student.name %>
                                                                     </option>
@@ -250,8 +260,7 @@
                                                             </button>
                                                         </td>
                                                     </form>
-                                                    <% }); %>
-                                                        <% } %>
+                                                <% } %>
                             </tbody>
                         </table>
                     </div>
