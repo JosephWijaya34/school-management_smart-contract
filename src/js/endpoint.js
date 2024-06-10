@@ -90,45 +90,36 @@ app.post('/studentpelajarans', async (req, res) => {
     }
 });
   
-  // Endpoint untuk menambahkan skor siswa
+// Endpoint untuk menambahkan skor siswa
 app.post('/scores', async (req, res) => {
-    const { studentAddress, mataPelajaranId, score } = req.body;
-  
-    try {
+  const { studentAddress, mataPelajaranId, score } = req.body;
+  try {
       const studentScore = await prisma.studentScore.create({
-        data: {
-          score,
-          student: {
-            connect: { address: studentAddress },
+          data: {
+              score,
+              student: { connect: { address: studentAddress } },
+              subject: { connect: { id: mataPelajaranId } },
           },
-          subject: {
-            connect: { id: mataPelajaranId },
-          },
-        },
       });
       res.json(studentScore);
-    } catch (error) {
+  } catch (error) {
       res.status(400).json({ error: 'Error adding score' });
-    }
+  }
 });
-  
+
 // Endpoint untuk mendapatkan skor siswa
 app.get('/studentScores', async (req, res) => {
-    const { studentAddress, mataPelajaranId } = req.query;
-  
-    try {
+  const { studentAddress, mataPelajaranId } = req.query;
+  try {
       const studentScore = await prisma.studentScore.findUnique({
-        where: {
-          studentId_subjectId: {
-            studentId: studentAddress,
-            subjectId: mataPelajaranId,
+          where: {
+              studentId_subjectId: { studentId: studentAddress, subjectId: mataPelajaranId },
           },
-        },
       });
       res.json(studentScore);
-    } catch (error) {
+  } catch (error) {
       res.status(400).json({ error: 'Error getting student score' });
-    }
+  }
 });
   
 // Endpoint untuk mendapatkan daftar siswa dalam mata pelajaran
