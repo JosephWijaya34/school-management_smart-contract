@@ -47,7 +47,6 @@ app.get("/register-student", function (request, response) {
 
 app.post("/auth", async (request, response) => {
   var addr = request.body.address;
-  // var pwd = request.body.password;
 
   try {
     let tx = await RC.getTeacher(addr);
@@ -70,33 +69,53 @@ app.post("/auth", async (request, response) => {
   }
 });
 
+// route untuk menambahkan guru
 app.post("/register-teacher", async (request, response) => {
-  var addr = request.body.address;
-  var name = request.body.name;
+  const addr = request.body.address;
+  const name = request.body.name;
+
   try {
     let tx = await RC.addTeacher(addr, name);
     console.log(tx);
 
-    axios
-      .post("http://localhost:3000/teachers", {
-        address: addr,
-        name: name,
-      })
-      .then((response) => {
-        console.log("Data guru berhasil disisipkan:", response.data);
-      })
-      .catch((error) => {
-        console.error("Error memanggil endpoint:", error);
-      });
+    const teachers = await prisma.teacher.findMany();
+    const students = await prisma.student.findMany();
 
+    let isRegistered = false;
+
+    teachers.forEach((teacher) => {
+      if (teacher.address === addr) {
+        console.log("address sudah terdaftar sebagai Guru");
+        isRegistered = true;
+      }
+    });
+
+    students.forEach((student) => {
+      if (student.address === addr) {
+        console.log("address sudah terdaftar sebagai murid");
+        isRegistered = true;
+      }
+    });
+
+    if (isRegistered) {
+      response.redirect("/");
+      return; // Stop further execution
+    }
+
+    await axios.post("http://localhost:3000/teachers", {
+      address: addr,
+      name: name,
+    });
+
+    console.log("Data guru berhasil disisipkan");
     response.redirect("/");
   } catch (err) {
     response.redirect("/register-teacher");
-    // response.render("registerTeacher");
     console.log(err);
   }
 });
 
+// route untuk menambahkan siswa
 app.post("/register-student", async (request, response) => {
   var addr = request.body.address;
   var name = request.body.name;
@@ -104,6 +123,31 @@ app.post("/register-student", async (request, response) => {
     let tx = await RC.addStudent(addr, name);
     console.log(tx);
     // Simpan data student ke database
+
+    const teachers = await prisma.teacher.findMany();
+    const students = await prisma.student.findMany();
+
+    let isRegistered = false;
+
+    teachers.forEach((teacher) => {
+      if (teacher.address === addr) {
+        console.log("address sudah terdaftar sebagai Guru");
+        isRegistered = true;
+      }
+    });
+
+    students.forEach((student) => {
+      if (student.address === addr) {
+        console.log("address sudah terdaftar sebagai murid");
+        isRegistered = true;
+      }
+    });
+
+    if (isRegistered) {
+      response.redirect("/");
+      return; // Stop further execution
+    }
+
     axios
       .post("http://localhost:3000/students", {
         address: addr,
@@ -123,7 +167,8 @@ app.post("/register-student", async (request, response) => {
   }
 });
 
-app.get("/teacher-dashboard", async (request, response) => {
+// admin dashboard
+app.get("/admin-dashboard", async (request, response) => {
   // let teachers = await RC.getTeachers();
   let teachers = await prisma.teacher.findMany();
   let pelajarans = await prisma.mataPelajaran.findMany();
@@ -135,47 +180,17 @@ app.get("/teacher-dashboard", async (request, response) => {
   });
 });
 
-// app.get("/student-dashboard", async (request, response) => {
-//   let tx = await RC.getStudent(addr, mataPelajaranId);
-//   console.log(tx);
-
-//   let studentSubjects = await prisma.studentPelajaran.findMany();
-//   let pelajarans = await prisma.mataPelajaran.findMany();
-//   let students = await prisma.student.findMany();
-//   response.render("student-dashboard", {
-//     subjects: pelajarans.length ? pelajarans : [],
-//   });
-// });
-
-app.get("/subject/:id", async (request, response) => {
-  const subjectId = request.params.id;
-  let subject = await prisma.mataPelajaran.findUnique({
-    where: {
-      id: Number(subjectId),
-    },
-  });
-
-  let studentsid = await prisma.studentSubjects.findMany({
-    where: {
-      subjectId: Number(subjectId),
-    },
-  });
-
-  // get the students by subject id
-  let students = await prisma.student.findMany({
-    where: {
-      id: {
-        in: studentsid.map((student) => student.studentId),
-      },
-    },
-  });
-
-  response.render("subject-detail", {
-    subject: subject,
+// teacher dashboard
+app.get("/teacher-dashboard", async (request, response) => {
+  let pelajarans = await prisma.mataPelajaran.findMany();
+  let students = await prisma.student.findMany();
+  response.render("teacher-dashboard", {
+    subjects: pelajarans.length ? pelajarans : [],
     students: students.length ? students : [],
   });
 });
 
+//student dashboard
 app.get("/student-dashboard", async (request, response) => {
   const addr = request.cookies.addr;
   console.log("Student address: ", addr);
@@ -210,6 +225,26 @@ app.get("/student-dashboard", async (request, response) => {
     console.error("Error fetching student dashboard data:", error);
     response.status(500).send("Internal server error");
   }
+});
+
+app.get("/subject/:id", async (request, response) => {
+  const subjectId = request.params.id;
+  let subject = await prisma.mataPelajaran.findUnique({
+    where: {
+      id: subjectId,
+    },
+  });
+
+  let students = await prisma.studentSubjects.findMany({
+    where: {
+      subjectId: subjectId,
+    },
+  });
+
+  response.render("subject-detail", {
+    subject: subject,
+    students: students.length ? students : [],
+  });
 });
 
 app.post("/add-student-to-subject", async (request, response) => {
