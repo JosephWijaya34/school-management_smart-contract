@@ -17,12 +17,25 @@
         class="max-w-md mx-auto w-full flex flex-col justify-center items-center mt-5"
       >
         <h1 class="text-4xl font-bold mb-5">List Pelajaran</h1>
-        <ul>
-          <!-- LIST MATA PELAJARAN -->
-          <% subjects.forEach(function(pelajaran) { %>
-          <li class="text-lg"><%= pelajaran.name %></li>
-          <% }); %>
-        </ul>
+        
+
+        <!-- Buatkan saya tabel untuk menampilkan pelajaran dan nilai -->
+        <table class="table-auto mt-5 border">
+          <thead>
+            <tr>
+              <th class="px-4 py-2">Pelajaran</th>
+              <th class="px-4 py-2">Nilai</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- LIST MATA PELAJARAN -->
+            <% subjects.forEach(function(pelajaran) { %>
+            <tr class="">
+              <td class="border px-4 py-2"><%= pelajaran.name %></td>
+              <td class="border px-4 py-2"><%= pelajaran.grade %></td>
+            </tr>
+            <% }); %>
+          </tbody>
       </div>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
