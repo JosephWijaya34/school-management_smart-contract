@@ -198,19 +198,53 @@ app.get("/teacher-dashboard", async (request, response) => {
       },
     });
 
+    // Check if there are subjects assigned to the teacher
+    if (!pelajarans || pelajarans.length === 0) {
+      return response.status(404).json({ error: "No subjects found for this teacher" });
+    }
     // Find all students
     const students = await prisma.student.findMany();
 
-    // Find the teacher's details (optional, since you already have the address)
-    const teacher = await prisma.teacher.findUnique({
-      where: {
-        address: teacherAddr,
-      },
-    });
+    // Fetch scores for each subject
+    const subjectsWithScores = await Promise.all(pelajarans.map(async (subject) => {
+      try {
+        const scores = await prisma.studentScore.findMany({
+          where: {
+            subjectId: parseInt(subject.id),
+          },
+          include: {
+            student: true, // Optional: Include student details
+          },
+        });
+
+        const scoresWithDetails = scores.map((score) => {
+          return {
+            student: score.student.name, // Access student name
+            subject: subject.name, // Access subject name
+            score: score.score, // Access score value
+          };
+        });
+
+        return {
+          subjectName: subject.name,
+          scoresWithDetails: scoresWithDetails,
+        };
+      } catch (err) {
+        console.error(`Error fetching scores for subject ID ${subject.id}:`, err);
+        return {
+          subjectName: subject.name,
+          scoresWithDetails: scoresWithDetails,
+        };
+      }
+    }));
+    
+    // console.log("Subjects name:", subjectsWithScores);
 
     response.render("teacher-dashboard", {
       subjects: pelajarans.length ? pelajarans : [],
       students: students.length ? students : [],
+      subjectsWithScores: subjectsWithScores,
+      scoresWithDetails: subjectsWithScores.scoresWithDetails,
     });
   } catch (error) {
     console.error("Error fetching data:", error);
@@ -345,31 +379,48 @@ app.post("/create-subject", async (request, response) => {
 app.post("/scores", async (request, response) => {
   var mataPelajaranId = request.body.mataPelajaranId;
   var score = request.body.score;
-  var studentAddress = request.body.studentAddress;
+  var studentId = request.body.studentAddress;
 
-  console.log(studentAddress);
+  console.log(studentId);
   console.log(mataPelajaranId);
   console.log(score);
+
   try {
+    // Fetch student address from the database using studentId
+    const student = await prisma.student.findUnique({
+      where: {
+        id: studentId,
+      },
+    });
+    if (!student) {
+      console.error("Student not found");
+      return response.status(404).json({ error: "Student not found" });
+    }
+    const studentAddress = student.address;
+    console.log(studentAddress);
+
     let tx = await RC.addScore(mataPelajaranId, studentAddress, score);
     console.log(tx);
+
     // Simpan data skor ke database
-    axios
-      .post("http://localhost:3000/scores", {
-        studentAddress: studentAddress,
-        mataPelajaranId: mataPelajaranId,
-        score: score,
-      })
-      .then((response) => {
-        console.log("Data skor berhasil disisipkan:", response.data);
-      })
-      .catch((error) => {
-        console.error("Error memanggil endpoint:", error);
+    try {
+      const result = await prisma.studentScore.create({
+        data: {
+          studentId: studentId,
+          subjectId: parseInt(mataPelajaranId),
+          score: parseInt(score),
+        },
       });
+      console.log("Data skor berhasil disisipkan:", result);
+    } catch (dbError) {
+      console.error("Error inserting score data into database:", dbError);
+      return response.status(500).json({ error: "Internal Server Error" });
+    }
+
     response.redirect("/teacher-dashboard");
   } catch (err) {
-    response.redirect("/teacher-dashboard");
-    console.log(err);
+    console.error("Error handling request:", err);
+    response.status(500).redirect("/teacher-dashboard");
   }
 });
 
