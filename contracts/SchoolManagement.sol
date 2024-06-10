@@ -109,19 +109,11 @@ contract SchoolManagement {
     }
 
     function getTeacher(address addr) public view returns (bool) {
-        if (listTeacher[addr] == true) {
-            return (true);
-        } else {
-            return (false);
-        }
+        return listTeacher[addr];
     }
 
     function getStudent(address addr) public view returns (bool) {
-        if (listStudent[addr] == true) {
-            return (true);
-        } else {
-            return (false);
-        }
+        return listStudent[addr];
     }
 
     function checkTeachers(address addr) public view returns (bool) {

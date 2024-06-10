@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css"
+      rel="stylesheet"
+    />
+    <title>Detail Mata Pelajaran</title>
+  </head>
+  <body>
+    <h1>Nama Mata Pelajaran : <%= subject.name %></h1>
+    <!-- list student -->
+    <ul>
+      <% students.forEach(function(student) { %>
+      <li class="text-lg">
+        <a href="/student-detail/<%= student.id %>"><%= student.name %></a>
+      </li>
+      <% }); %>
+    </ul>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
+  </body>
+</html>

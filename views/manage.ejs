@@ -31,7 +31,7 @@
         <ul>
           <!-- LIST SUBJECT -->
           <% subjects.forEach(function(pelajaran) { %>
-          <li class="text-lg"><%= pelajaran.name %></li>
+          <li class="text-lg"><a href="/subject/<%= pelajaran.id %>"><%= pelajaran.name %></a></li>
           <% }); %>
         </ul>
       </div>

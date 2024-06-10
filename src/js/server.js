@@ -12,7 +12,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const RC = await tools.constructSmartContract();
-console.log("Smart contract initialized", RC);
+// console.log("Smart contract initialized", RC);
 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -145,6 +145,26 @@ app.get("/teacher-dashboard", async (request, response) => {
 //   });
 // });
 
+app.get("/subject/:id", async (request, response) => {
+  const subjectId = request.params.id;
+  let subject = await prisma.mataPelajaran.findUnique({
+    where: {
+      id: subjectId,
+    },
+  });
+
+  let students = await prisma.studentSubjects.findMany({
+    where: {
+      subjectId: subjectId,
+    },
+  });
+
+  response.render("subject-detail", {
+    subject: subject,
+    students: students.length ? students : [],
+  });
+});
+
 app.get("/student-dashboard", async (request, response) => {
   const addr = request.cookies.addr;
 
@@ -171,7 +191,9 @@ app.get("/student-dashboard", async (request, response) => {
 });
 
 app.post("/add-student-to-subject", async (request, response) => {
-  const { studentAddress, subjectId } = request.body;
+
+  const studentAddress = request.body.studentAddress;
+  const subjectId = request.body.mataPelajaranId;
 
   try {
     // Call the smart contract function to add a student to a subject
@@ -192,7 +214,6 @@ app.post("/add-student-to-subject", async (request, response) => {
     response.status(500).send("Internal server error");
   }
 });
-
 
 app.post("/create-subject", async (request, response) => {
   var name = request.body.subjectName;
