@@ -150,6 +150,32 @@ app.get('/matapelajaranstudents', async (req, res) => {
     }
 });
 
+// Endpoint untuk mendapatkan daftar mata pelajaran seorang siswa
+app.get('/studentSubjects', async (req, res) => {
+  const { studentId } = req.query;
+  
+  try {
+    const subjects = await prisma.studentSubjects.findMany({
+      where: {
+        studentId: studentId,
+      },
+      include: {
+        subject: true,
+      },
+    });
+
+    if (subjects.length === 0) {
+      return res.status(404).json({ error: 'No subjects found for the given studentId' });
+    }
+
+    res.json(subjects.map(ss => ss.subject));
+  } catch (error) {
+    console.error('Error getting student subjects:', error);
+    res.status(500).json({ error: 'An error occurred while getting student subjects' });
+  }
+});
+
+
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });

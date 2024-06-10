@@ -108,10 +108,16 @@ contract SchoolManagement {
         emit teacherAdded(addr, _name);
     }
 
-    function getTeacher(
-        address addr
-    ) public view returns (bool) {
+    function getTeacher(address addr) public view returns (bool) {
         if (listTeacher[addr] == true) {
+            return (true);
+        } else {
+            return (false);
+        }
+    }
+
+    function getStudent(address addr) public view returns (bool) {
+        if (listStudent[addr] == true) {
             return (true);
         } else {
             return (false);
@@ -217,5 +223,29 @@ contract SchoolManagement {
         returns (address[] memory)
     {
         return matapelajarans[_matapelajaranID].listStudent;
+    }
+
+    function getStudentMataPelajarans(
+        address addr
+    ) public view returns (uint[] memory) {
+        uint[] memory studentSubjectsTemp = new uint[](mataPelajaranCounter);
+        uint counter = 0;
+
+        for (uint i = 0; i < mataPelajaranCounter; i++) {
+            for (uint j = 0; j < matapelajarans[i].listStudent.length; j++) {
+                if (matapelajarans[i].listStudent[j] == addr) {
+                    studentSubjectsTemp[counter] = i;
+                    counter++;
+                    break;
+                }
+            }
+        }
+
+        // Resize the array to fit the actual number of subjects found
+        uint[] memory studentSubjects = new uint[](counter);
+        for (uint k = 0; k < counter; k++) {
+            studentSubjects[k] = studentSubjectsTemp[k];
+        }
+        return studentSubjects;
     }
 }
