@@ -188,13 +188,38 @@ app.get("/admin-dashboard", async (request, response) => {
 
 // teacher dashboard
 app.get("/teacher-dashboard", async (request, response) => {
-  let pelajarans = await prisma.mataPelajaran.findMany();
-  let students = await prisma.student.findMany();
-  response.render("teacher-dashboard", {
-    subjects: pelajarans.length ? pelajarans : [],
-    students: students.length ? students : [],
-  });
+  const teacherAddr = request.cookies.address;
+
+  try {
+    // Find the subjects assigned to this teacher
+    const pelajarans = await prisma.mataPelajaran.findMany({
+      where: {
+        teacherAddress: teacherAddr,
+      },
+    });
+
+    
+
+    // Find all students
+    const students = await prisma.student.findMany();
+
+    // Find the teacher's details (optional, since you already have the address)
+    const teacher = await prisma.teacher.findUnique({
+      where: {
+        address: teacherAddr,
+      },
+    });
+
+    response.render("teacher-dashboard", {
+      subjects: pelajarans.length ? pelajarans : [],
+      students: students.length ? students : [],
+    });
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    response.status(500).json({ error: "Internal Server Error" });
+  }
 });
+
 
 //student dashboard
 app.get("/student-dashboard", async (request, response) => {
@@ -311,6 +336,7 @@ app.post("/add-student-to-subject", async (request, response) => {
   }
 });
 
+//create subject
 app.post("/create-subject", async (request, response) => {
   var name = request.body.subjectName;
   var teacherAddress = request.body.teacherAddress;
@@ -327,6 +353,38 @@ app.post("/create-subject", async (request, response) => {
       })
       .then((response) => {
         console.log("Data mata pelajaran berhasil disisipkan:", response.data);
+      })
+      .catch((error) => {
+        console.error("Error memanggil endpoint:", error);
+      });
+    response.redirect("/teacher-dashboard");
+  } catch (err) {
+    response.redirect("/teacher-dashboard");
+    console.log(err);
+  }
+});
+
+// create score
+app.post("/scores", async (request, response) => {
+  var mataPelajaranId = request.body.mataPelajaranId;
+  var score = request.body.score;
+  var studentAddress = request.body.studentAddress;
+
+  console.log(studentAddress);
+  console.log(mataPelajaranId);
+  console.log(score);
+  try {
+    let tx = await RC.addScore(mataPelajaranId, studentAddress, score);
+    console.log(tx);
+    // Simpan data skor ke database
+    axios
+      .post("http://localhost:3000/scores", {
+        studentAddress: studentAddress,
+        mataPelajaranId: mataPelajaranId,
+        score: score,
+      })
+      .then((response) => {
+        console.log("Data skor berhasil disisipkan:", response.data);
       })
       .catch((error) => {
         console.error("Error memanggil endpoint:", error);
