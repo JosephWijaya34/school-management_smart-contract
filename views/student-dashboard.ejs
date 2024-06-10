@@ -10,16 +10,14 @@
     />
   </head>
   <body>
-    <!-- Buatkan saya sebuah tabek dan juga form untuk membuat pelajaran baru dan menampilkan list pelajaran baru -->
     <div class="flex flex-col justify-center items-center h-screen">
       <h1 class="text-4xl font-bold mb-5">Student Dashboard</h1>
       <div
         class="max-w-md mx-auto w-full flex flex-col justify-center items-center mt-5"
       >
         <h1 class="text-4xl font-bold mb-5">List Pelajaran</h1>
-        
 
-        <!-- Buatkan saya tabel untuk menampilkan pelajaran dan nilai -->
+        <!-- Tabel untuk menampilkan pelajaran dan nilai -->
         <table class="table-auto mt-5 border">
           <thead>
             <tr>
@@ -30,12 +28,13 @@
           <tbody>
             <!-- LIST MATA PELAJARAN -->
             <% subjects.forEach(function(pelajaran) { %>
-            <tr class="">
+            <tr>
               <td class="border px-4 py-2"><%= pelajaran.name %></td>
-              <td class="border px-4 py-2"><%= pelajaran.grade %></td>
+              <td class="border px-4 py-2"><%= pelajaran.score %></td>
             </tr>
             <% }); %>
           </tbody>
+        </table>
       </div>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>

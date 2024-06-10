@@ -67,11 +67,11 @@ app.post("/auth", async (request, response) => {
       console.log(`Admin with ${addr}`);
       response.redirect("/admin-dashboard");
     } else {
-      response.send();
+      response.redirect("/login");
     }
   } catch (err) {
-    response.redirect("/login");
     console.log(err);
+    response.redirect("/login");
   }
 });
 
@@ -202,7 +202,6 @@ app.get("/teacher-dashboard", async (request, response) => {
     if (!pelajarans || pelajarans.length === 0) {
       return response.status(404).json({ error: "No subjects found for this teacher" });
     }
-
     // Find all students
     const students = await prisma.student.findMany();
 
@@ -253,62 +252,41 @@ app.get("/teacher-dashboard", async (request, response) => {
   }
 });
 
-
 //student dashboard
-app.get("/student-dashboard", async (request, response) => { 
-  const addr = request.cookies.addr;
+app.get("/student-dashboard", async (request, response) => {
+  const addr = request.cookies.address;
   console.log("Student address: ", addr);
   try {
-    // Fetch student data by address
-    let student = await RC.getStudentData(addr);
-    if (!student) {
-      response.status(404).send("Student not found");
-      return;
-    }
-
-    // Fetch student data from Prisma
-    student = await prisma.student.findUnique({
-      where: {
-        address: addr,
-      },
+    const student = await prisma.student.findUnique({
+      where: { address: addr },
     });
     if (!student) {
       response.status(404).send("Student not found in database");
       return;
     }
     console.log("Student: ", student.name);
-
-    // Fetch subjects associated with the student
-    let subjects = await prisma.studentSubjects.findMany({
-      where: {
-        studentId: student.id,
-      },
+    const studentSubjects = await prisma.studentSubjects.findMany({
+      where: { studentId: student.id },
     });
-
-    // Log each subject
-    subjects.forEach((subject) => {
-      console.log(subject);
-    });
-
-    // Fetch detailed subject information
-    let listSubjectPromises = subjects.map(async (sub) => {
-      console.log(sub.subjectId);
-      let temp = await prisma.MataPelajaran.findUnique({
+    const listSubjectPromises = studentSubjects.map(async (sub) => {
+      const subject = await prisma.mataPelajaran.findUnique({
+        where: { id: sub.subjectId },
+      });
+      const score = await prisma.studentScore.findFirst({
         where: {
-          id: sub.subjectId,
+          studentId: student.id,
+          subjectId: sub.subjectId,
         },
       });
-      return temp;
+      return {
+        ...subject,
+        score: score ? score.score : "N/A",
+      };
     });
-
-    let listSubject = await Promise.all(listSubjectPromises);
-
-    // Log each subject's name
+    const listSubject = await Promise.all(listSubjectPromises);
     listSubject.forEach((subject) => {
-      console.log("List of subjects: ", subject ? subject.name : "undefined");
+      console.log("List of subjects: ", subject.name, "Score: ", subject.score);
     });
-
-    // Render the student dashboard
     response.render("student-dashboard", {
       subjects: listSubject.length ? listSubject : [],
     });
