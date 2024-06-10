@@ -114,12 +114,69 @@
                 </div>
 
                 <!-- assign score list -->
-                <div id="" class="mb-8 bg-white shadow-md rounded-lg border border-gray-200 p-6">
+                <div id="" class="mb-12 bg-white shadow-md rounded-lg border border-gray-200 p-6">
                     <!-- title -->
                     <div class="flex items-center justify-start">
                         <h1 class="font-bold text-2xl py-5">Assign Nilai Siswa</h1>
                     </div>
-                    <!-- list -->
+
+                    <!-- list data nilai siswa -->
+                    <div class="p-4 bg-white min-h-40 overflow-x-auto text-center mb-5">
+                        <table class="min-w-full divide-y divide-gray-300">
+                            <thead class="bg-gray-50 ">
+                                <tr>
+                                    <th scope="col"
+                                        class="py-3 pl-4 pr-3 text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6">
+                                        No
+                                    </th>
+                                    <th scope="col"
+                                        class="py-3 pl-4 pr-3 text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6">
+                                        Nama Siswa
+                                    </th>
+                                    <th scope="col"
+                                        class="py-3 pl-4 pr-3 text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6">
+                                        Nama Pelajaran
+                                    </th>
+                                    <th scope="col"
+                                        class="py-3 pl-4 pr-3 text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6">
+                                        Assign Nilai
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-200 bg-white">
+                                <% if (students.length===0) { %>
+                                    <tr>
+                                        <td colspan="6" class="px-6 py-4 text-center">Tidak ada Siswa</td>
+                                    </tr>
+                                <% }%>
+                                <% if (students.length> 0){ %>
+                                    <!-- list siswa -->
+                                    <% students.forEach(function(murid, index) { %>
+                                        <tr>
+                                            <td
+                                                class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
+                                                <%= index + 1 %>
+                                            </td>
+                                            <td
+                                                class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
+                                                <%= murid.name %>
+                                            </td>
+                                            <td
+                                                class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
+                                                <p class="text-lg">Nama pelajaran</p>
+                                            </td>
+                                            <td
+                                                class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
+                                                <p class="text-lg">Score</p>
+                                            </td>
+                                        </tr>
+                                    <% }); %>
+                                <% } %>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- list assign nilai siswa -->
                     <div class="p-4 bg-white border shadow-md min-h-40 rounded-lg overflow-x-auto text-center">
                         <table class="min-w-full divide-y divide-gray-300">
                             <thead class="bg-gray-50 ">
@@ -162,20 +219,20 @@
                                                     </td>
                                                     <td
                                                         class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-                                                        <%= murid.name %>
-                                                    </td>
-                                                    <td
-                                                        class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
                                                         <select name="subjectsName" id="subjectsName"
                                                             class="block w-full text-black bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                                                             required>
-                                                            <option value="" disabled selected>Pilih Pelajaran</option>
+                                                            <option value="" disabled selected>Pilih Mahasiswa</option>
                                                             <% students.forEach(function(student) { %>
                                                                 <option value="<%= student.name %>">
                                                                     <%= student.name %>
                                                                 </option>
                                                                 <% }); %>
                                                         </select>
+                                                    </td>
+                                                    <td
+                                                        class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
+                                                        <%= murid.name %>
                                                     </td>
                                                     <form method="POST" action="auth">
                                                         <td
