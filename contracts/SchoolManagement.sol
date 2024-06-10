@@ -108,6 +108,10 @@ contract SchoolManagement {
         emit teacherAdded(addr, _name);
     }
 
+    function getAdmin(address addr) public view returns (bool) {
+        return listAdmin[addr];
+    }
+
     function getTeacher(address addr) public view returns (bool) {
         return listTeacher[addr];
     }

@@ -51,15 +51,20 @@ app.post("/auth", async (request, response) => {
   try {
     let tx = await RC.getTeacher(addr);
     let tx2 = await RC.getStudent(addr);
+    let tx3 = await RC.getAdmin(addr);
     console.log(tx);
     if (tx == true) {
-      response.cookie("addr", addr);
+      response.cookie("address", addr, { maxAge: 900000, httpOnly: true });
       console.log(`Teacher with ${addr}`);
       response.redirect("/teacher-dashboard");
     } else if (tx2 == true) {
-      response.cookie("addr", addr);
+      response.cookie("address", addr, { maxAge: 900000, httpOnly: true });
       console.log(`Student with ${addr}`);
       response.redirect("/student-dashboard");
+    } else if (tx3 == true) {
+      response.cookie("address", addr, { maxAge: 900000, httpOnly: true });
+      console.log(`Admin with ${addr}`);
+      response.redirect("/admin-dashboard");
     } else {
       response.send();
     }

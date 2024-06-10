@@ -4,6 +4,7 @@
 RUN npm install
 
 # database setup / schema change
+RUN cp .env.development .env
 RUN npx prisma generate
 
 # contract code change
