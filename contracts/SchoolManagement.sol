@@ -118,6 +118,16 @@ contract SchoolManagement {
         }
     }
 
+    function getStudent(
+        address addr
+    ) public view returns (bool) {
+        if (listStudent[addr] == true) {
+            return (true);
+        } else {
+            return (false);
+        }
+    }
+
     function checkTeachers(address addr) public view returns (bool) {
         console.log("Teacher Name: ", teachers[addr].name);
         return listTeacher[addr];

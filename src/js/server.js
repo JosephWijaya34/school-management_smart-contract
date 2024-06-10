@@ -37,11 +37,11 @@ app.get("/login", function (request, response) {
   response.render("login");
 });
 
-app.get("/createTeacher", function (request, response) {
+app.get("/register-teacher", function (request, response) {
   response.render("registerTeacher", {});
 });
 
-app.get("/createStudent", function (request, response) {
+app.get("/register-student", function (request, response) {
   response.render("registerStudent", {});
 });
 
@@ -49,37 +49,26 @@ app.post("/auth", async (request, response) => {
   var addr = request.body.address;
   // var pwd = request.body.password;
 
-  // try {
-  //   RC.getTeacher(addr).then(function (res) {
-  //     console.log(res);
-  //     if (res == true) {
-  //       response.cookie("addr", addr);
-  //       response.redirect("/manageSubject");
-  //     } else {
-  //       response.send();
-  //     }
-  //   });
-  // } catch (err) {
-  //   console.log(err);
-  // }
-
   try {
     let tx = await RC.getTeacher(addr);
+    let tx2 = await RC.getStudent(addr);
     console.log(tx);
     if (tx == true) {
       response.cookie("addr", addr);
-      response.redirect("/manageSubject");
+      response.redirect("/teacher-dashboard");
+    } else if (tx2 == true) {
+      response.cookie("addr", addr);
+      response.redirect("/student-dashboard");
     } else {
       response.send();
     }
   } catch (err) {
     response.redirect("/login");
-    // response.render("registerTeacher");
     console.log(err);
   }
 });
 
-app.post("/createTeacher", async (request, response) => {
+app.post("/register-teacher", async (request, response) => {
   var addr = request.body.address;
   var name = request.body.name;
   try {
@@ -100,13 +89,13 @@ app.post("/createTeacher", async (request, response) => {
 
     response.redirect("/");
   } catch (err) {
-    response.redirect("/createTeacher");
+    response.redirect("/register-teacher");
     // response.render("registerTeacher");
     console.log(err);
   }
 });
 
-app.post("/createStudent", async (request, response) => {
+app.post("/register-student", async (request, response) => {
   var addr = request.body.address;
   var name = request.body.name;
   try {
@@ -126,25 +115,25 @@ app.post("/createStudent", async (request, response) => {
       });
     response.redirect("/");
   } catch (err) {
-    response.redirect("/createStudent");
+    response.redirect("/register-student");
     // response.render("registerStudent");
     console.log(err);
   }
 });
 
-app.get("/manageSubject", async (request, response) => {
+app.get("/teacher-dashboard", async (request, response) => {
   // let teachers = await RC.getTeachers();
   let teachers = await prisma.teacher.findMany();
   let pelajarans = await prisma.mataPelajaran.findMany();
-  let murids = await prisma.student.findMany();
+  let students = await prisma.student.findMany();
   response.render("manage", {
     teachers: teachers.length ? teachers : [],
     subjects: pelajarans.length ? pelajarans : [],
-    students: murids.length ? murids : [],
+    students: students.length ? students : [],
   });
 });
 
-app.post("/createSubject", async (request, response) => {
+app.post("/create-subject", async (request, response) => {
   var name = request.body.subjectName;
   var teacherAddress = request.body.teacherAddress;
   console.log(name);
