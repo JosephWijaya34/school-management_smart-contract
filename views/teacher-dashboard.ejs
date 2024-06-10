@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Teacher Dashboard</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css" rel="stylesheet" />
+</head>
+
+<body class="flex flex-col min-h-screen">
+    <!-- header section -->
+    <header class="fixed top-0 w-full max-h-[100px] z-20 bg-violet-900">
+        <h1 class="flex text-center justify-center text-4xl font-bold my-4 text-white">Teacher Dashboard</h1>
+    </header>
+
+    <!-- content -->
+    <div class="flex flex-col flex-grow justify-center items-center md:mt-[110px] mt-[120px]">
+        <main class="flex-grow p-2 md:p-5 w-[80%]">
+            <div class="flex flex-col justify-center items-center">
+                <div class="flex flex-col max-w-md mx-auto w-full justify-center items-center mt-5">
+                    <h1 class="text-4xl font-bold mb-5">List Pelajaran</h1>
+                    <ul>
+                        <% if (subjects.length===0) { %>
+                            <li class="text-lg">Tidak ada pelajaran</li>
+                            <% }%>
+                                <% if (subjects.length> 0){ %>
+                                    <!-- LIST SUBJECT -->
+                                    <% subjects.forEach(function(pelajaran) { %>
+                                        <li class="text-lg"><a href="/subject/<%= pelajaran.id %>">
+                                                <%= pelajaran.name %>
+                                            </a></li>
+                                        <% }); %>
+                                            <% } %>
+                    </ul>
+                </div>
+                <div class="flex flex-col max-w-md mx-auto w-full justify-center items-center mt-5">
+                    <h1 class="text-4xl font-bold mb-5">List Murid</h1>
+                    <ul>
+                        <% if (students.length===0) { %>
+                            <li class="text-lg">Tidak ada Siswa</li>
+                            <% }%>
+                                <% if (students.length> 0){ %>
+                                    <!-- LIST STUDENT -->
+                                    <% students.forEach(function(murid) { %>
+                                        <li class="text-lg">
+                                            <%= murid.name %>
+                                        </li>
+                                        <% }); %>
+                                            <% } %>
+                    </ul>
+                </div>
+                <div class="flex flex-col max-w-md mx-auto w-full justify-center items-center mt-5">
+                    <label for="input nilai"></label>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- footer -->
+    <footer class="fixed bottom-0 w-full bg-zinc-900 py-4 text-center text-gray-500">
+        <p class="text-white">&copy; 2024 - Joseph || Reynaldo || Jovan</p>
+    </footer>
+
+    <!-- javascript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</body>
+
+</html>
