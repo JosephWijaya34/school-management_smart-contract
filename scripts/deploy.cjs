@@ -1,5 +1,5 @@
-const path = require("path");
 // import path from 'path';
+const path = require("path");
 
 async function main() {
 
@@ -21,9 +21,6 @@ async function main() {
   
     const SchoolManagement = await ethers.getContractFactory("SchoolManagement");
     const schoolManagement = await SchoolManagement.deploy();
-
-    //console.log(JSON.stringify(voting));
-    //console.log(voting.target);
   
     console.log("Voting smart contract address:", schoolManagement.target);
   

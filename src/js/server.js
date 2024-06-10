@@ -12,7 +12,8 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const RC = await tools.constructSmartContract();
-//console.log(RC);
+console.log("Smart contract initialized", RC);
+
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -25,6 +26,14 @@ app.set("view engine", "ejs");
 app.use(express.static(path.join(__dirname, "public")));
 
 app.get("/", function (request, response) {
+  response.render("home");
+});
+
+app.get("/home", function (request, response) {
+  response.render("home");
+});
+
+app.get("/login", function (request, response) {
   response.render("login");
 });
 
@@ -34,6 +43,40 @@ app.get("/createTeacher", function (request, response) {
 
 app.get("/createStudent", function (request, response) {
   response.render("registerStudent", {});
+});
+
+app.post("/auth", async (request, response) => {
+  var addr = request.body.address;
+  // var pwd = request.body.password;
+
+  // try {
+  //   RC.getTeacher(addr).then(function (res) {
+  //     console.log(res);
+  //     if (res == true) {
+  //       response.cookie("addr", addr);
+  //       response.redirect("/manageSubject");
+  //     } else {
+  //       response.send();
+  //     }
+  //   });
+  // } catch (err) {
+  //   console.log(err);
+  // }
+
+  try {
+    let tx = await RC.getTeacher(addr);
+    console.log(tx);
+    if (tx == true) {
+      response.cookie("addr", addr);
+      response.redirect("/manageSubject");
+    } else {
+      response.send();
+    }
+  } catch (err) {
+    response.redirect("/login");
+    // response.render("registerTeacher");
+    console.log(err);
+  }
 });
 
 app.post("/createTeacher", async (request, response) => {
@@ -94,7 +137,11 @@ app.get("/manageSubject", async (request, response) => {
   let teachers = await prisma.teacher.findMany();
   let pelajarans = await prisma.mataPelajaran.findMany();
   let murids = await prisma.student.findMany();
-  response.render("manage", { teachers: teachers.length ? teachers : [], subjects: pelajarans.length ? pelajarans : [], students: murids.length ? murids : [] });
+  response.render("manage", {
+    teachers: teachers.length ? teachers : [],
+    subjects: pelajarans.length ? pelajarans : [],
+    students: murids.length ? murids : [],
+  });
 });
 
 app.post("/createSubject", async (request, response) => {
@@ -177,5 +224,5 @@ app.post("/createSubject", async (request, response) => {
 // });
 
 app.listen(8000, async (request, response) => {
-  console.log("I'm listening");
+  console.log("I'm listening on port 8000");
 });

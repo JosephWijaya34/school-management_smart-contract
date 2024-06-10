@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css"
+      rel="stylesheet"
+    />
+    <title>School Management System</title>
+    <style>
+      .button-container {
+        display: flex;
+        gap: 1rem;
+        margin-top: 2rem;
+      }
+      .account-message {
+        margin-top: 1rem;
+        font-size: 0.875rem;
+      }
+      .login-link {
+        color: blue;
+        cursor: pointer;
+        text-decoration: underline;
+        margin-left: 0.5rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="flex flex-col justify-center items-center h-screen">
+      <h1 class="text-4xl font-bold mb-5">School Management System</h1>
+      <div class="button-container">
+        <button
+          type="button"
+          class="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+          onclick="window.location.href='createStudent'"
+        >
+          Register Student
+        </button>
+        <button
+          type="button"
+          class="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+          onclick="window.location.href='createTeacher'"
+        >
+          Register Teacher
+        </button>
+      </div>
+      <div class="account-message">
+        Already have an account?
+        <a class="login-link" href="login">Login</a>
+      </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
+  </body>
+</html>
