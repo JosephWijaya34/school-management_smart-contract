@@ -170,6 +170,30 @@ app.get("/student-dashboard", async (request, response) => {
   }
 });
 
+app.post("/add-student-to-subject", async (request, response) => {
+  const { studentAddress, subjectId } = request.body;
+
+  try {
+    // Call the smart contract function to add a student to a subject
+    let tx = await RC.addStudentPelajaran(studentAddress, subjectId);
+    console.log(tx);
+
+    // Optionally, you can also store this relationship in your Prisma database
+    await prisma.studentSubjects.create({
+      data: {
+        studentId: studentAddress,
+        subjectId: subjectId.toString(),
+      },
+    });
+
+    response.redirect("/student-dashboard");
+  } catch (error) {
+    console.error("Error adding student to subject:", error);
+    response.status(500).send("Internal server error");
+  }
+});
+
+
 app.post("/create-subject", async (request, response) => {
   var name = request.body.subjectName;
   var teacherAddress = request.body.teacherAddress;
