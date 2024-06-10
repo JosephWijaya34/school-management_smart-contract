@@ -71,16 +71,11 @@ contract SchoolManagement {
         _;
     }
 
-    modifier mataPelajaranExist(uint _matapelajaran) {
+    modifier newMataPelajaran(uint _matapelajaran) {
         require(
             _matapelajaran < mataPelajaranCounter,
             "mata pelajaran does not exist"
         );
-        _;
-    }
-
-    modifier studentExist(address _student) {
-        require(listStudent[_student] == true, "student does not exist");
         _;
     }
 
@@ -199,8 +194,8 @@ contract SchoolManagement {
     )
         public
         view
-        mataPelajaranExist(_matapelajaranID)
-        studentExist(addr)
+        newMataPelajaran(_matapelajaranID)
+        newStudent(addr)
         returns (uint)
     {
         require(
@@ -217,7 +212,7 @@ contract SchoolManagement {
     )
         public
         view
-        mataPelajaranExist(_matapelajaranID)
+        newMataPelajaran(_matapelajaranID)
         onlyAuthorized
         returns (address[] memory)
     {
