@@ -116,6 +116,12 @@ contract SchoolManagement {
         return listStudent[addr];
     }
 
+    function getStudentData(address addr) public view returns (Student memory student) {
+        if (listStudent[addr]) {
+            return students[addr];
+        }
+    }
+
     function checkTeachers(address addr) public view returns (bool) {
         console.log("Teacher Name: ", teachers[addr].name);
         return listTeacher[addr];
