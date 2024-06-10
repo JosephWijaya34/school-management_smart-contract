@@ -1,5 +1,3 @@
-<!-- SAMPE SINI YA -->
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -54,20 +52,20 @@
                       scope="col"
                       class="py-3 pl-4 pr-3 text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6"
                     >
-                      Nama Pelajaran
+                      Nama Guru
                     </th>
                   </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200 bg-white">
-                  <% if (teachers.length===0) { %>
+                  <% if (teachers.length === 0) { %>
                   <tr>
                     <td colspan="6" class="px-6 py-4 text-center">
                       Tidak ada guru
                     </td>
                   </tr>
-                  <% }%> <% if (teachers.length> 0){ %>
+                  <% } %> <% if (teachers.length > 0) { %>
                   <!-- LIST GURU -->
-                  <% teachers.forEach(function(teacher) { %>
+                  <% teachers.forEach(function(teacher, index) { %>
                   <tr>
                     <td
                       class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6"
@@ -77,12 +75,10 @@
                     <td
                       class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6"
                     >
-                      <a href="/subject/<%= pelajaran.id %>">
-                        <%= teacher.name %>
-                      </a>
+                      <a href="#"> <%= teacher.name %> </a>
                     </td>
-                    <% }); %> <% } %>
                   </tr>
+                  <% }); %> <% } %>
                 </tbody>
               </table>
             </div>
@@ -119,13 +115,13 @@
                   </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200 bg-white">
-                  <% if (subjects.length===0) { %>
+                  <% if (subjects.length === 0) { %>
                   <tr>
                     <td colspan="6" class="px-6 py-4 text-center">
                       Tidak ada pelajaran
                     </td>
                   </tr>
-                  <% }%> <% if (subjects.length> 0){ %>
+                  <% } %> <% if (subjects.length > 0) { %>
                   <!-- LIST SUBJECT -->
                   <% subjects.forEach(function(pelajaran, index) { %>
                   <tr>
@@ -141,8 +137,8 @@
                         <%= pelajaran.name %>
                       </a>
                     </td>
-                    <% }); %> <% } %>
                   </tr>
+                  <% }); %> <% } %>
                 </tbody>
               </table>
             </div>
@@ -174,19 +170,19 @@
                       scope="col"
                       class="py-3 pl-4 pr-3 text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6"
                     >
-                      Nama Pelajaran
+                      Nama Murid
                     </th>
                   </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200 bg-white">
-                  <% if (students.length===0) { %>
+                  <% if (students.length === 0) { %>
                   <tr>
                     <td colspan="6" class="px-6 py-4 text-center">
                       Tidak ada Siswa
                     </td>
                   </tr>
-                  <% }%> <% if (students.length> 0){ %>
-                  <!-- LIST SUBJECT -->
+                  <% } %> <% if (students.length > 0) { %>
+                  <!-- LIST STUDENTS -->
                   <% students.forEach(function(murid, index) { %>
                   <tr>
                     <td
@@ -199,8 +195,8 @@
                     >
                       <%= murid.name %>
                     </td>
-                    <% }); %> <% } %>
                   </tr>
+                  <% }); %> <% } %>
                 </tbody>
               </table>
             </div>
@@ -221,20 +217,21 @@
                   type="text"
                   name="subjectName"
                   id="subjectName"
-                  class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                  class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none  focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                   placeholder=" "
                   required
                 />
                 <label
-                  for="lesson"
-                  class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                  >Pelajaran</label
+                  for="subjectName"
+                  class="peer-focus:font-medium absolute text-sm text-gray-500  duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                 >
+                  Pelajaran
+                </label>
                 <!-- dropdown guru untuk dipilih -->
                 <select
                   name="teacherAddress"
                   id="teacherAddress"
-                  class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                  class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                   required
                 >
                   <option value="" disabled selected>Pilih Guru</option>
@@ -247,7 +244,7 @@
               </div>
               <button
                 type="submit"
-                class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
               >
                 Submit
               </button>
@@ -263,7 +260,7 @@
                 <select
                   name="studentAddress"
                   id="studentAddress"
-                  class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                  class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                   required
                 >
                   <option value="" disabled selected>Pilih Murid</option>
@@ -279,7 +276,7 @@
                 <select
                   name="mataPelajaranId"
                   id="mataPelajaranId"
-                  class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                  class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                   required
                 >
                   <option value="" disabled selected>Pilih Pelajaran</option>
@@ -292,7 +289,7 @@
               </div>
               <button
                 type="submit"
-                class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center "
               >
                 Add Student to Subject
               </button>
