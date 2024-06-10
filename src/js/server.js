@@ -55,9 +55,11 @@ app.post("/auth", async (request, response) => {
     console.log(tx);
     if (tx == true) {
       response.cookie("addr", addr);
+      console.log(`Teacher with ${addr}`);
       response.redirect("/teacher-dashboard");
     } else if (tx2 == true) {
       response.cookie("addr", addr);
+      console.log(`Student with ${addr}`);
       response.redirect("/student-dashboard");
     } else {
       response.send();
@@ -149,13 +151,22 @@ app.get("/subject/:id", async (request, response) => {
   const subjectId = request.params.id;
   let subject = await prisma.mataPelajaran.findUnique({
     where: {
-      id: subjectId,
+      id: Number(subjectId),
     },
   });
 
-  let students = await prisma.studentSubjects.findMany({
+  let studentsid = await prisma.studentSubjects.findMany({
     where: {
-      subjectId: subjectId,
+      subjectId: Number(subjectId),
+    },
+  });
+
+  // get the students by subject id
+  let students = await prisma.student.findMany({
+    where: {
+      id: {
+        in: studentsid.map((student) => student.studentId),
+      },
     },
   });
 
@@ -167,22 +178,33 @@ app.get("/subject/:id", async (request, response) => {
 
 app.get("/student-dashboard", async (request, response) => {
   const addr = request.cookies.addr;
-
+  console.log("Student address: ", addr);
   try {
-    let studentSubjectIds = await RC.getStudentMataPelajarans(addr);
-    console.log("Student Subject IDs: ", studentSubjectIds);
+    // let studentSubjectIds = await RC.getStudentMataPelajarans(addr);
+    // console.log("Student Subject IDs: ", studentSubjectIds);
+    // get the student by address
+    let student = await RC.getStudentData(addr);
 
-    let subjects = [];
-    if (studentSubjectIds.length > 0) {
-      subjects = await prisma.mataPelajaran.findMany({
+    let subjects;
+    subjects = await prisma.studentSubjects.findMany({
+      where: {
+          studentId: student.id,
+        },
+    });
+
+    let listSubject;
+    if (subjects.length) {
+      listSubject = await prisma.mataPelajaran.findMany({
         where: {
-          id: { in: studentSubjectIds.map((id) => id.toString()) },
+          id: {
+            in: subjects.map((subject) => subject.subjectId),
+          },
         },
       });
     }
 
     response.render("student-dashboard", {
-      subjects: subjects.length ? subjects : [],
+      subjects: listSubject.length ? listSubject : [],
     });
   } catch (error) {
     console.error("Error fetching student dashboard data:", error);
@@ -191,7 +213,6 @@ app.get("/student-dashboard", async (request, response) => {
 });
 
 app.post("/add-student-to-subject", async (request, response) => {
-
   const studentAddress = request.body.studentAddress;
   const subjectId = request.body.mataPelajaranId;
 
@@ -200,15 +221,22 @@ app.post("/add-student-to-subject", async (request, response) => {
     let tx = await RC.addStudentPelajaran(studentAddress, subjectId);
     console.log(tx);
 
-    // Optionally, you can also store this relationship in your Prisma database
-    await prisma.studentSubjects.create({
-      data: {
-        studentId: studentAddress,
-        subjectId: subjectId.toString(),
+    // get the student and subject data from the database
+    let student = await prisma.student.findUnique({
+      where: {
+        address: studentAddress,
       },
     });
 
-    response.redirect("/student-dashboard");
+    // Optionally, you can also store this relationship in your Prisma database
+    await prisma.studentSubjects.create({
+      data: {
+        studentId: student.id,
+        subjectId: Number(subjectId),
+      },
+    });
+
+    response.redirect("/teacher-dashboard");
   } catch (error) {
     console.error("Error adding student to subject:", error);
     response.status(500).send("Internal server error");
