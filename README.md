@@ -1,20 +1,20 @@
 # school-management_smart-contract
 
 # setup
-RUN npm install
+npm install
 
 # database setup / schema change
-RUN cp .env.development .env
-RUN npx prisma generate
+cp .env.development .env
+npx prisma generate
 
 # contract code change
-RUN npx hardhat compile
+npx hardhat compile
 
 # run code
-RUN npx hardhat node
+npx hardhat node
 npx hardhat run scripts/deploy.cjs --network localhost
-RUN npm run api
-RUN npm run start
+npm run api
+npm run start
 
 # port
 OPEN localhost:8000
