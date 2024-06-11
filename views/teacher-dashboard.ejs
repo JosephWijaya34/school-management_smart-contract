@@ -141,35 +141,9 @@
                                         <td colspan="4" class="px-6 py-4 text-center">Tidak ada Siswa</td>
                                     </tr>
                                 <% } else { %>
-                                    <!-- Loop through each student -->
                                     <% students.forEach(function(student, index) { %>
-                                        <!-- Check if the student has scores -->
-                                        <% console.log("student.name:",student.name); %>
-                                        <% const studentScores = subjectsWithScores.find(subject => subject.student === student.name); %>
-                                        <% console.log("studentScores:",studentScores); %>
-                                        <% if (studentScores) { %>
-                                            <!-- Loop through each score of the student -->
-                                            <% studentScores.scoresWithDetails.forEach(function(score) { %>
-                                                <tr>
-                                                    <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-                                                        <%= index + 1 %>
-                                                    </td>
-                                                    <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-                                                        <% console.log("student.name:", student.name); %>
-                                                        <%= student.name %>
-                                                    </td>
-                                                    <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-                                                        <% console.log("student.name:", score.subject); %>
-                                                        <%= score.subject %>
-                                                    </td>
-                                                    <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-                                                        <% console.log("score.score:", score.subject); %>
-                                                        <%= score.score %>
-                                                    </td>
-                                                </tr>
-                                            <% }); %>
-                                        <% } else { %>
-                                            <!-- If the student has no scores -->
+                                        <% subjectsWithScores.forEach(function(subject) { %>
+                                            <% const scoreDetail = subject.scoresWithDetails.find(detail => detail.student === student.name); %>
                                             <tr>
                                                 <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
                                                     <%= index + 1 %>
@@ -177,9 +151,14 @@
                                                 <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
                                                     <%= student.name %>
                                                 </td>
-                                                <td colspan="2" class="px-6 py-4 text-center">Tidak ada Skor</td>
+                                                <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
+                                                    <%= subject.subjectName %>
+                                                </td>
+                                                <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
+                                                    <%= scoreDetail ? scoreDetail.score : 'N/A' %>
+                                                </td>
                                             </tr>
-                                        <% } %>
+                                        <% }); %>
                                     <% }); %>
                                 <% } %>
                             </tbody>

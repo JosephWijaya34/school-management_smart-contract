@@ -202,6 +202,7 @@ app.get("/teacher-dashboard", async (request, response) => {
     if (!pelajarans || pelajarans.length === 0) {
       return response.status(404).json({ error: "No subjects found for this teacher" });
     }
+    
     // Find all students
     const students = await prisma.student.findMany();
 
@@ -210,47 +211,43 @@ app.get("/teacher-dashboard", async (request, response) => {
       try {
         const scores = await prisma.studentScore.findMany({
           where: {
-            subjectId: parseInt(subject.id),
+            subjectId: subject.id,
           },
           include: {
-            student: true, // Optional: Include student details
+            student: true, // Include student details
           },
         });
 
-        const scoresWithDetails = scores.map((score) => {
-          return {
-            student: score.student.name, // Access student name
-            subject: subject.name, // Access subject name
-            score: score.score, // Access score value
-          };
-        });
+        const scoresWithDetails = scores.map((score) => ({
+          student: score.student.name,
+          subject: subject.name,
+          score: score.score,
+        }));
 
         return {
           subjectName: subject.name,
-          scoresWithDetails: scoresWithDetails,
+          scoresWithDetails,
         };
       } catch (err) {
         console.error(`Error fetching scores for subject ID ${subject.id}:`, err);
         return {
           subjectName: subject.name,
-          scoresWithDetails: scoresWithDetails,
+          scoresWithDetails: [],
         };
       }
     }));
-    
-    // console.log("Subjects name:", subjectsWithScores);
 
     response.render("teacher-dashboard", {
-      subjects: pelajarans.length ? pelajarans : [],
-      students: students.length ? students : [],
-      subjectsWithScores: subjectsWithScores,
-      scoresWithDetails: subjectsWithScores.scoresWithDetails,
+      subjects: pelajarans,
+      students,
+      subjectsWithScores,
     });
   } catch (error) {
     console.error("Error fetching data:", error);
     response.status(500).json({ error: "Internal Server Error" });
   }
 });
+
 
 //student dashboard
 app.get("/student-dashboard", async (request, response) => {
